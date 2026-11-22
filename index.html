@@ -1,0 +1,442 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<script>try{const t=localStorage.getItem('theme'),g=localStorage.getItem('tint');if(t)document.documentElement.dataset.theme=t;if(g)document.documentElement.style.setProperty('--tint',g)}catch{}</script>
+<title>Giá MacBook</title>
+<meta name="description" content="Theo dõi giá MacBook mới và cũ theo cấu hình mục tiêu, cập nhật mỗi sáng.">
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Giá Mac">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#e8edf6" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#05060b" media="(prefers-color-scheme: dark)">
+<style>
+/* Liquid Glass kiểu iOS 27: kính khuếch tán mạnh hơn sau chữ (dễ đọc), thanh trượt độ kính, thanh tab nổi gộp ô tìm kiếm, chuyển động lò xo.
+   Bộ token lấy từ DoGia để hai web cùng một "họ". */
+:root{color-scheme:light;--tint:.35;interpolate-size:allow-keywords;
+--spring:linear(0,.009,.035 2.1%,.141,.281 6.7%,.723 12.9%,.938 16.7%,1.017,1.077,1.121,1.149 24.3%,1.159,1.163,1.161,1.154 29.9%,1.129 32.8%,1.051 39.6%,1.017 43.1%,.991,.977 51%,.974 53.8%,.975 57.1%,.997 69.8%,1.003 76.9%,1);--ios:cubic-bezier(.32,.72,0,1);
+--wall:#e8edf6;--b1:#7ec3ff;--b2:#c6a8ff;--b3:#ffc6a8;--b4:#9eeed3;
+--text:#0b0b0f;--muted:rgba(60,60,67,.74);--faint:rgba(60,60,67,.5);--line:rgba(60,60,67,.14);--track:rgba(120,120,128,.13);
+--accent:#007aff;--ok:#1f8f3a;--ok-bg:rgba(52,199,89,.16);--down:#0a6fe0;--up:#e5352b;--down-bg:rgba(0,122,255,.13);--up-bg:rgba(255,59,48,.13);--warn-bg:rgba(255,149,0,.18);--warn:#a85400;
+--g:255 255 255;--ga:calc(.42 + var(--tint)*.5);--bar-a:calc(.18 + var(--tint)*.24);--blur:calc(14px + var(--tint)*18px);
+--brd:rgba(255,255,255,.7);--bar-brd:rgba(255,255,255,.62);--edge:rgba(0,0,0,.09);--spec:rgba(255,255,255,.95);--spec-b:rgba(255,255,255,.58);--rim:rgba(255,255,255,.42);--sheen-t:rgba(255,255,255,.38);--sheen-b:rgba(255,255,255,.2);
+--sh:0 8px 28px rgba(40,50,90,.12);--sh-s:0 2px 8px rgba(40,50,90,.1);--bar-sh:inset 0 1.5px 1px var(--spec),inset 0 -1.5px 1.5px var(--spec-b),inset 0 0 12px var(--rim),0 0 0 .5px var(--edge),0 12px 32px rgba(20,30,60,.18);--lens:linear-gradient(180deg,rgba(255,255,255,.9),rgba(255,255,255,.6));--solid:#fff}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]){color-scheme:dark;--wall:#05060b;--b1:#1c48c9;--b2:#5f27c4;--b3:#9a4a12;--b4:#0b6e5a;
+--text:#f5f5f7;--muted:rgba(235,235,245,.72);--faint:rgba(235,235,245,.46);--line:rgba(235,235,245,.12);--track:rgba(120,120,128,.24);
+--accent:#0a84ff;--ok:#4cd964;--ok-bg:rgba(48,209,88,.2);--down:#4aa3ff;--up:#ff6b61;--down-bg:rgba(10,132,255,.22);--up-bg:rgba(255,69,58,.22);--warn-bg:rgba(255,159,10,.2);--warn:#ffb340;
+--g:30 30 36;--ga:calc(.38 + var(--tint)*.52);--bar-a:calc(.24 + var(--tint)*.28);--brd:rgba(255,255,255,.14);--bar-brd:rgba(255,255,255,.26);--edge:rgba(0,0,0,.6);--spec:rgba(255,255,255,.42);--spec-b:rgba(255,255,255,.18);--rim:rgba(255,255,255,.14);--sheen-t:rgba(255,255,255,.18);--sheen-b:rgba(255,255,255,.07);
+--sh:0 10px 30px rgba(0,0,0,.45);--sh-s:0 2px 8px rgba(0,0,0,.35);--bar-sh:inset 0 1.5px 1px var(--spec),inset 0 -1.5px 1.5px var(--spec-b),inset 0 0 14px var(--rim),0 0 0 .5px var(--edge),0 14px 36px rgba(0,0,0,.48);--lens:linear-gradient(180deg,rgba(255,255,255,.3),rgba(255,255,255,.15));--solid:#1c1c1e}}
+:root[data-theme=dark]{color-scheme:dark;--wall:#05060b;--b1:#1c48c9;--b2:#5f27c4;--b3:#9a4a12;--b4:#0b6e5a;
+--text:#f5f5f7;--muted:rgba(235,235,245,.72);--faint:rgba(235,235,245,.46);--line:rgba(235,235,245,.12);--track:rgba(120,120,128,.24);
+--accent:#0a84ff;--ok:#4cd964;--ok-bg:rgba(48,209,88,.2);--down:#4aa3ff;--up:#ff6b61;--down-bg:rgba(10,132,255,.22);--up-bg:rgba(255,69,58,.22);--warn-bg:rgba(255,159,10,.2);--warn:#ffb340;
+--g:30 30 36;--ga:calc(.38 + var(--tint)*.52);--bar-a:calc(.24 + var(--tint)*.28);--brd:rgba(255,255,255,.14);--bar-brd:rgba(255,255,255,.26);--edge:rgba(0,0,0,.6);--spec:rgba(255,255,255,.42);--spec-b:rgba(255,255,255,.18);--rim:rgba(255,255,255,.14);--sheen-t:rgba(255,255,255,.18);--sheen-b:rgba(255,255,255,.07);
+--sh:0 10px 30px rgba(0,0,0,.45);--sh-s:0 2px 8px rgba(0,0,0,.35);--bar-sh:inset 0 1.5px 1px var(--spec),inset 0 -1.5px 1.5px var(--spec-b),inset 0 0 14px var(--rim),0 0 0 .5px var(--edge),0 14px 36px rgba(0,0,0,.48);--lens:linear-gradient(180deg,rgba(255,255,255,.3),rgba(255,255,255,.15));--solid:#1c1c1e}
+
+/* Ba lớp kính: nội dung (card), thanh nổi (header/tab bar), điều khiển nhỏ (nút/chip/ô nhập) */
+.kpi,.group,.empty,dialog{background:rgb(var(--g)/var(--ga));-webkit-backdrop-filter:blur(var(--blur)) saturate(1.8);backdrop-filter:blur(var(--blur)) saturate(1.8);border:1px solid var(--brd);box-shadow:inset 0 1px 0 var(--spec),0 0 0 .5px var(--edge),var(--sh)}
+.top::before,.tabbar{background:rgb(var(--g)/var(--bar-a));-webkit-backdrop-filter:blur(12px) saturate(2.1) contrast(1.06) brightness(1.03);backdrop-filter:blur(12px) saturate(2.1) contrast(1.06) brightness(1.03);border:1px solid var(--bar-brd);box-shadow:var(--bar-sh)}
+.btn,.chip,.field{background:rgb(var(--g)/var(--ga));-webkit-backdrop-filter:blur(12px) saturate(1.5);backdrop-filter:blur(12px) saturate(1.5);border:1px solid var(--brd);box-shadow:inset 0 1px 0 var(--spec),0 0 0 .5px var(--edge),var(--sh-s)}
+
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{scroll-padding-top:90px}
+body{margin:0;min-height:100vh;background:var(--wall);color:var(--text);font:16px/1.4 -apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI Variable","Segoe UI",system-ui,Roboto,sans-serif;-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent;overscroll-behavior-y:contain}
+body::before{content:"";position:fixed;inset:-18%;z-index:-1;pointer-events:none;background:radial-gradient(38% 32% at 18% 14%,var(--b1),transparent 70%),radial-gradient(34% 30% at 84% 16%,var(--b2),transparent 70%),radial-gradient(40% 36% at 74% 86%,var(--b3),transparent 70%),radial-gradient(36% 34% at 10% 84%,var(--b4),transparent 70%);transform:translateZ(0)}
+main{max-width:900px;margin:0 auto;padding:0 16px calc(110px + env(safe-area-inset-bottom))}
+h1{font-size:32px;line-height:1.12;font-weight:700;letter-spacing:-.024em;margin:0;transform-origin:left center;transition:transform .34s var(--ios)}
+h2{font-size:22px;font-weight:700;letter-spacing:-.02em;margin:22px 4px 10px}
+a{color:var(--accent)}
+button{font:inherit;color:inherit;cursor:pointer;background:none;border:0;padding:0;touch-action:manipulation}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.sub{color:var(--muted);font-size:13px}
+.num{font-variant-numeric:tabular-nums}
+
+.btn{border-radius:999px;padding:8px 16px;font-weight:600;font-size:15px;white-space:nowrap;transition:transform .34s var(--ios)}
+.btn:active,.chip:active,.tab:active{transform:scale(.92);transition-duration:.1s}
+.btn.icon{width:40px;height:40px;padding:0;display:inline-grid;place-items:center}
+.btn svg,.tab svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.btn.spin svg{animation:spin .8s linear infinite}
+@keyframes spin{to{rotate:360deg}}
+
+/* Thanh tiêu đề nổi, tiêu đề lớn thu nhỏ khi cuộn */
+.top{position:sticky;top:max(10px,env(safe-area-inset-top));z-index:10;isolation:isolate;display:flex;justify-content:space-between;align-items:center;gap:12px;margin:12px 0 14px;padding:12px 14px 12px 18px;border-radius:28px}
+.top::before,.top::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none}
+.top::before{z-index:-1;border:0}
+.top::after{z-index:2;background:linear-gradient(180deg,var(--sheen-t),transparent 28%,transparent 74%,var(--sheen-b));box-shadow:inset 0 0 10px var(--rim)}
+.scrolled h1{transform:scale(.74)}
+.brand{min-width:0;display:flex;align-items:center;gap:10px}
+.brand img{width:36px;height:36px;border-radius:10px;flex-shrink:0;box-shadow:0 2px 8px rgba(20,30,60,.18);transition:transform .34s var(--ios)}
+.scrolled .brand img{transform:scale(.84)}
+.brand .sub{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.acts{display:flex;gap:8px}
+
+.chips{display:flex;gap:7px;overflow-x:auto;padding:4px 2px 10px;margin:0 -2px;scrollbar-width:none;overscroll-behavior-x:contain;scroll-snap-type:x proximity}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex-shrink:0;white-space:nowrap;scroll-snap-align:start;border-radius:999px;padding:7px 15px;font-size:14px;font-weight:500;transition:transform .32s var(--ios)}
+.chip[aria-pressed=true]{background:color-mix(in srgb,var(--accent) 88%,transparent);color:#fff;border-color:rgba(255,255,255,.3)}
+
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:4px 0 6px}
+.kpi{border-radius:24px;padding:13px 16px;min-width:0}
+.kpi b{display:block;font-size:24px;font-weight:700;letter-spacing:-.02em;margin:1px 0}
+.kpi span{display:block;font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* Danh sách inset-grouped kiểu Cài đặt / Chứng khoán */
+.group{border-radius:26px;overflow:hidden;margin-bottom:12px}
+.ghead{display:flex;justify-content:space-between;align-items:baseline;margin:18px 6px 7px;font-size:13px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.02em}
+.ghead small{text-transform:none;font-weight:400;letter-spacing:0}
+.row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 12px;align-items:center;width:100%;padding:12px 16px;text-align:left;position:relative;transition:background-color .16s;text-decoration:none;color:inherit}
+.row+.row::before{content:"";position:absolute;top:0;left:16px;right:0;border-top:.5px solid var(--line)}
+.row:active{background:var(--track)}
+@media (hover:hover) and (pointer:fine){.row:hover{background:var(--track)}}
+.row .t{font-weight:600;font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row .s{font-size:13px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row .r{display:flex;align-items:center;gap:10px;justify-content:flex-end}
+.price{font-size:17px;font-weight:600;font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap}
+.price small{display:block;font-size:12px;font-weight:500;margin-top:1px}
+.row .chev{color:var(--faint);font-size:20px;line-height:1;margin-left:-2px}
+.spark{width:56px;height:24px;flex-shrink:0;overflow:visible}
+.spark path{fill:none;stroke:currentColor;stroke-width:1.8;stroke-linejoin:round;stroke-linecap:round}
+.down{color:var(--down)} .up{color:var(--up)} .flat{color:var(--faint)} .ok{color:var(--ok)}
+.pill{display:inline-block;font-size:12px;font-weight:600;padding:2px 8px;border-radius:999px;white-space:nowrap;font-variant-numeric:tabular-nums}
+.pill.ok{background:var(--ok-bg)} .pill.down{background:var(--down-bg)} .pill.up{background:var(--up-bg)} .pill.warn{background:var(--warn-bg);color:var(--warn)} .pill.flat{background:var(--track);color:var(--muted)}
+.empty{border-radius:22px;padding:22px 18px;text-align:center;color:var(--muted);font-size:15px}
+.err{background:var(--warn-bg);color:var(--warn);padding:12px 16px;border-radius:18px;font-size:14px;margin:8px 0}
+.intro .kpi,.intro .group{animation:rise .5s var(--ios) both;animation-delay:calc(min(var(--i,0),6)*30ms)}
+@keyframes rise{from{opacity:0;transform:translate3d(0,14px,0) scale(.98)}}
+
+/* Tìm kiếm */
+.field{display:flex;align-items:center;gap:8px;border-radius:999px;padding:0 14px;height:44px;margin:4px 0 6px}
+.field svg{width:18px;height:18px;flex-shrink:0;fill:none;stroke:var(--muted);stroke-width:2.2;stroke-linecap:round}
+.field input{flex:1;min-width:0;height:100%;border:0;background:none;font:inherit;font-size:17px;color:inherit;outline:none}
+.field input::placeholder{color:var(--faint)}
+
+/* Thanh tab nổi iOS 27: tìm kiếm là một tab, "thấu kính" trượt theo tab đang chọn, thu gọn khi cuộn xuống */
+.tabbar{position:fixed;z-index:20;left:50%;bottom:calc(12px + env(safe-area-inset-bottom));transform:translate3d(-50%,0,0);display:flex;padding:4px;border-radius:999px;isolation:isolate;transition:transform .4s var(--ios)}
+.tabbar::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:2;background:linear-gradient(180deg,var(--sheen-t),transparent 30%,transparent 72%,var(--sheen-b))}
+.tab{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:1px;min-width:76px;padding:7px 12px 6px;border-radius:999px;font-size:11px;font-weight:600;color:var(--text);opacity:.72;transition:color .2s,opacity .2s,transform .32s var(--ios),padding .3s var(--ios)}
+.tab span{transition:opacity .2s,max-height .3s var(--ios);max-height:16px;overflow:hidden}
+.tab[aria-selected=true]{color:var(--accent);opacity:1}
+.lens{position:absolute;z-index:0;top:4px;bottom:4px;left:0;width:76px;border-radius:999px;background:var(--lens);box-shadow:0 3px 12px rgba(0,0,0,.12),inset 0 1.5px 1px var(--spec),inset 0 -1px 1px var(--spec-b),0 0 0 .5px var(--edge);transition:transform .42s var(--ios),width .42s var(--ios)}
+.lens.jelly{animation:jelly .45s var(--spring)}
+@keyframes jelly{30%{scale:1.1 .9}}
+.mini .tab{padding:9px 12px} .mini .tab span{opacity:0;max-height:0}
+
+/* Sheet chi tiết */
+dialog{padding:0;width:min(680px,calc(100% - 24px));max-height:calc(100% - 24px);border-radius:34px;color:var(--text);--ga:calc(.6 + var(--tint)*.36);overscroll-behavior:contain}
+dialog[open]{animation:pop .38s var(--ios)}
+dialog.closing{transform:translate3d(0,16px,0) scale(.95);opacity:0;transition:transform .24s var(--ios),opacity .2s}
+dialog::backdrop{background:rgba(0,0,0,.24);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px)}
+dialog.closing::backdrop{opacity:0;transition:opacity .2s}
+@keyframes pop{from{opacity:0;transform:translate3d(0,22px,0) scale(.94)}}
+.dlg{padding:18px 18px 22px}
+.dlg-h{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;touch-action:none}
+.dlg-h h2{margin:0;font-size:22px}
+.close{width:32px;height:32px;border-radius:50%;background:var(--track);display:grid;place-items:center;flex-shrink:0;font-size:15px;font-weight:700;color:var(--muted)}
+.big{font-size:38px;font-weight:700;letter-spacing:-.03em;margin:6px 0 2px;font-variant-numeric:tabular-nums}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:14px 0}
+.stats div{background:var(--track);border-radius:16px;padding:9px 11px;min-width:0}
+.stats span{display:block;font-size:11px;color:var(--muted)}
+.stats b{font-size:14px;font-variant-numeric:tabular-nums}
+.sec{background:var(--track);border-radius:20px;overflow:hidden;margin-top:12px}
+.sec h3{font-size:13px;font-weight:600;color:var(--muted);margin:12px 16px 4px;text-transform:uppercase;letter-spacing:.02em}
+.sec .row+.row::before{border-color:var(--line)}
+.chart{padding:4px 12px 10px}
+.chart svg{display:block;width:100%;height:auto;overflow:visible}
+.chart .ln{fill:none;stroke:var(--accent);stroke-width:2.2;stroke-linejoin:round}
+.chart .ar{fill:url(#fade);opacity:.5}
+.chart .cap{stroke:var(--ok);stroke-dasharray:4 4;stroke-width:1.2}
+.chart text{font-size:11px;fill:var(--faint);font-family:inherit}
+.chart .dot{fill:var(--accent);stroke:var(--solid);stroke-width:2}
+
+/* Cài đặt */
+.set{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 16px}
+.set+.set{border-top:.5px solid var(--line)}
+.seg{display:inline-flex;background:var(--track);border-radius:10px;padding:2px}
+.seg button{padding:6px 12px;border-radius:8px;font-size:13px;font-weight:600;color:var(--muted);transition:background-color .2s,color .2s}
+.seg button[aria-pressed=true]{background:var(--solid);color:var(--text);box-shadow:0 2px 6px rgba(0,0,0,.12)}
+input[type=range]{accent-color:var(--accent);width:150px}
+
+@media (max-width:640px){
+main{padding:0 12px calc(104px + env(safe-area-inset-bottom))}
+.top{top:max(8px,env(safe-area-inset-top));margin:8px 0 12px;padding:10px 10px 10px 14px;border-radius:24px}
+h1{font-size:27px} .brand img{width:32px;height:32px;border-radius:9px}
+.kpis{grid-template-columns:1fr 1fr;gap:8px} .kpi{padding:11px 14px;border-radius:20px} .kpi b{font-size:20px}
+.spark{display:none}
+.stats{grid-template-columns:1fr 1fr}
+dialog{width:100%;max-width:100%;max-height:92dvh;margin:auto 0 0;border-radius:32px 32px 0 0;border-bottom:0}
+dialog[open]{animation:sheet .4s var(--ios)}
+dialog.closing{transform:translate3d(0,100%,0);opacity:1;transition:transform .28s var(--ios)}
+.dlg{padding:8px 16px calc(22px + env(safe-area-inset-bottom))}
+.dlg::before{content:"";display:block;width:38px;height:5px;border-radius:3px;background:var(--faint);opacity:.6;margin:0 auto 10px}
+.big{font-size:34px}
+}
+@keyframes sheet{from{transform:translate3d(0,100%,0)}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+@media (prefers-reduced-transparency:reduce){:root{--tint:1!important;--bar-a:.94!important}}
+@media (prefers-contrast:more){:root{--tint:1!important;--bar-a:.96!important;--muted:var(--text);--line:var(--faint)}}
+</style>
+</head>
+<body>
+<main>
+  <header class="top">
+    <div class="brand">
+      <img src="assets/apple-touch-icon.png" alt="" width="36" height="36">
+      <div style="min-width:0"><h1 id="title">Giá MacBook</h1><div class="sub" id="status">Đang tải…</div></div>
+    </div>
+    <div class="acts">
+      <button type="button" class="btn icon" id="refresh" aria-label="Tải lại giá"><svg viewBox="0 0 24 24"><path d="M20 11a8 8 0 1 0-2.3 5.7M20 4v7h-7"/></svg></button>
+      <button type="button" class="btn icon" id="openSet" aria-label="Cài đặt giao diện"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button>
+    </div>
+  </header>
+  <div class="err" id="err" hidden></div>
+
+  <section id="v-cfg" role="tabpanel" aria-label="Cấu hình">
+    <div class="kpis" id="kpis"></div>
+    <div class="chips" id="chips" role="group" aria-label="Lọc"></div>
+    <div id="cfgList"></div>
+  </section>
+  <section id="v-deal" role="tabpanel" aria-label="Deal" hidden>
+    <h2>Deal dưới giá trần</h2>
+    <div id="dealList"></div>
+  </section>
+  <section id="v-search" role="tabpanel" aria-label="Tìm kiếm" hidden>
+    <label class="field"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <input id="q" type="search" placeholder="Tìm: m1 pro 16, chợ tốt, pin 90…" aria-label="Tìm tin MacBook" enterkeyhint="search" autocomplete="off"></label>
+    <div id="searchList"></div>
+  </section>
+</main>
+
+<nav class="tabbar" id="tabbar" role="tablist" aria-label="Chuyển mục">
+  <i class="lens" id="lens" aria-hidden="true"></i>
+  <button class="tab" role="tab" data-tab="cfg" aria-selected="true"><svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="11" rx="1.6"/><path d="M2 19h20"/></svg><span>Cấu hình</span></button>
+  <button class="tab" role="tab" data-tab="deal" aria-selected="false"><svg viewBox="0 0 24 24"><path d="M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8z"/><circle cx="7.5" cy="7.5" r="1.3"/></svg><span>Deal</span></button>
+  <button class="tab" role="tab" data-tab="search" aria-selected="false"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><span>Tìm kiếm</span></button>
+</nav>
+
+<dialog id="dlg" aria-labelledby="dlgTitle"><div class="dlg" id="dlgBody"></div></dialog>
+
+<script>
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const vnd = v => v == null ? '–' : v.toLocaleString('vi-VN') + ' đ';
+const tr = v => v == null ? '–' : (v / 1e6).toLocaleString('vi-VN', { maximumFractionDigits: 2 }) + ' tr';
+const dmy = iso => iso ? iso.slice(8, 10) + '/' + iso.slice(5, 7) : '';
+const isNew = c => /mới|new|seal/i.test(c || '') && !/like\s*new|như mới|99/i.test(c || '');
+const SHEET = 'https://docs.google.com/spreadsheets/d/1A_vyHncnOD0s9aiWlJ1qBzIOuGW-ERapP0IAlg9c5-Y/edit';
+const WINDOW_DAYS = 14;
+const S = { data: null, cond: 'all', chip: 'all', tab: 'cfg', q: '' };
+try { Object.assign(S, JSON.parse(localStorage.getItem('view') || '{}'), { data: null }); } catch {}
+const save = () => { try { localStorage.setItem('view', JSON.stringify({ cond: S.cond, chip: S.chip, tab: S.tab })); } catch {} };
+
+// Tin còn thấy trong N ngày gần nhất (giống "Cửa sổ thống kê" của sheet)
+function active() {
+  const d = S.data, ref = new Date((d.time || '').slice(0, 10) || Date.now());
+  const since = new Date(ref - (d.settings?.windowDays || WINDOW_DAYS) * 864e5).toISOString().slice(0, 10);
+  return (d.listings || []).filter(l => l.price > 0 && (l.last || l.first || '') >= since
+    && (S.cond === 'all' || (S.cond === 'new') === isNew(l.cond)));
+}
+function stats(list) {
+  const p = list.map(l => l.price).sort((a, b) => a - b), n = p.length;
+  if (!n) return null;
+  return { n, min: p[0], max: p[n - 1], med: n % 2 ? p[n >> 1] : Math.round((p[n / 2 - 1] + p[n / 2]) / 2), avg: Math.round(p.reduce((a, b) => a + b, 0) / n) };
+}
+function trend(code) {
+  const h = (S.data.history || {})[code] || [];
+  if (h.length < 2) return null;
+  const d = h[h.length - 1][1] - h[h.length - 2][1];
+  return { d, cls: d < 0 ? 'down' : d > 0 ? 'up' : 'flat', since: h[h.length - 1][0] };
+}
+function spark(code) {
+  const h = ((S.data.history || {})[code] || []).slice(-30).map(p => p[1]);
+  if (h.length < 2) return '';
+  const lo = Math.min(...h), hi = Math.max(...h), k = hi - lo || 1;
+  const pts = h.map((v, i) => `${(i / (h.length - 1) * 56).toFixed(1)},${(22 - (v - lo) / k * 20).toFixed(1)}`).join(' L');
+  const c = h[h.length - 1] < h[0] ? 'down' : h[h.length - 1] > h[0] ? 'up' : 'flat';
+  return `<svg class="spark ${c}" viewBox="0 0 56 24" aria-hidden="true"><path d="M${pts}"/></svg>`;
+}
+const chg = t => t && t.d ? `<small class="${t.cls}">${t.d < 0 ? '▼' : '▲'} ${tr(Math.abs(t.d))}</small>` : '';
+const listingSub = l => [l.source, l.cond, l.screen && l.screen + '"', l.cpugpu, l.battery && 'Pin ' + l.battery + '%', l.warranty && 'BH ' + l.warranty + 'th', l.last && 'thấy ' + dmy(l.last)].filter(Boolean).map(esc).join(' · ');
+const listingRow = (l, title) => `<a class="row" href="${esc(/^https?:\/\//.test(l.url) ? l.url : '#')}" target="_blank" rel="noopener">
+  <div style="min-width:0"><div class="t">${esc(title || l.code)}</div><div class="s">${listingSub(l)}</div></div>
+  <div class="r"><div class="price">${tr(l.price)}${l.list > l.price ? `<small class="flat"><s>${tr(l.list)}</s></small>` : ''}</div><span class="chev">›</span></div></a>`;
+
+function render() {
+  const d = S.data;
+  if (!d) return;
+  const acts = active(), targets = (d.targets || []).slice().sort((a, b) => a.order - b.order || a.ram - b.ram || a.ssd - b.ssd);
+  const byCode = Object.fromEntries(targets.map(t => [t.code, t]));
+  const per = Object.fromEntries(targets.map(t => [t.code, stats(acts.filter(l => l.code === t.code))]));
+  const deals = acts.filter(l => byCode[l.code] && l.price <= byCode[l.code].cap).sort((a, b) => a.price / byCode[a.code].cap - b.price / byCode[b.code].cap);
+
+  // KPI
+  const under = targets.filter(t => per[t.code] && per[t.code].min <= t.cap).length;
+  const best = targets.map(t => per[t.code] && { t, v: per[t.code].min }).filter(Boolean).sort((a, b) => a.v - b.v)[0];
+  $('#kpis').innerHTML = [
+    [acts.length, `tin trong ${d.settings?.windowDays || WINDOW_DAYS} ngày`],
+    [`${under}/${targets.length}`, 'cấu hình dưới trần'],
+    [deals.length, 'deal đang có'],
+    [best ? tr(best.v) : '–', best ? `rẻ nhất · ${best.t.chip} ${best.t.ram}/${best.t.ssd}` : 'rẻ nhất'],
+  ].map(([b, s], i) => `<div class="kpi" style="--i:${i}"><b class="num">${esc(b)}</b><span>${esc(s)}</span></div>`).join('');
+
+  // Chip lọc: tình trạng + dòng chip
+  const chips = [...new Set(targets.map(t => t.chip))];
+  if (S.chip !== 'all' && !chips.includes(S.chip)) S.chip = 'all';
+  $('#chips').innerHTML = [['cond', 'all', 'Tất cả'], ['cond', 'new', 'Mới'], ['cond', 'used', 'Cũ'], ...chips.map(c => ['chip', c, c])]
+    .map(([k, v, label]) => `<button class="chip" data-k="${k}" data-v="${esc(v)}" aria-pressed="${k === 'cond' ? S.cond === v : S.chip === v}">${esc(label)}</button>`).join('');
+
+  // Danh sách cấu hình, nhóm theo dòng chip
+  const shown = targets.filter(t => S.chip === 'all' || t.chip === S.chip);
+  const groups = [...new Set(shown.map(t => t.chip))];
+  $('#cfgList').innerHTML = groups.map((g, gi) => {
+    const rows = shown.filter(t => t.chip === g).map(t => {
+      const s = per[t.code], tt = trend(t.code), ok = s && s.min <= t.cap;
+      const cheapest = s && acts.filter(l => l.code === t.code).sort((a, b) => a.price - b.price)[0];
+      return `<button class="row" data-code="${esc(t.code)}">
+        <div style="min-width:0"><div class="t">${esc(t.ram)}GB · ${t.ssd >= 1024 ? t.ssd / 1024 + 'TB' : t.ssd + 'GB'} <span class="pill ${ok ? 'ok' : 'flat'}">${ok ? 'Dưới trần' : 'Trần ' + tr(t.cap)}</span></div>
+        <div class="s">${s ? `${s.n} tin · rẻ nhất ở ${esc(cheapest.source)} · ${esc(t.need)}` : 'Chưa có tin trong ' + (d.settings?.windowDays || WINDOW_DAYS) + ' ngày'}</div></div>
+        <div class="r">${spark(t.code)}<div class="price">${s ? tr(s.min) : '–'}${chg(tt)}</div><span class="chev">›</span></div></button>`;
+    }).join('');
+    return `<div class="ghead"><span>${esc(g)}</span><small>${esc((byCode[shown.find(t => t.chip === g).code].screens || []).join('", ') + '"')}</small></div><div class="group" style="--i:${gi + 4}">${rows}</div>`;
+  }).join('') || '<div class="empty">Không có cấu hình nào khớp bộ lọc.</div>';
+
+  // Deal
+  $('#dealList').innerHTML = deals.length ? `<div class="group">${deals.slice(0, 60).map(l => {
+    const pct = Math.round((1 - l.price / byCode[l.code].cap) * 100);
+    return listingRow(l, l.code).replace('<div class="t">', `<div class="t"><span class="pill ok">−${pct}%</span> `);
+  }).join('')}</div>` : '<div class="empty">Chưa có tin nào dưới giá trần. Phím tắt sẽ báo khi có.</div>';
+
+  renderSearch(acts);
+  const t = new Date(d.time);
+  const p2 = n => String(n).padStart(2, '0');
+  $('#status').textContent = isNaN(t) ? '' : `Cập nhật ${p2(t.getHours())}:${p2(t.getMinutes())} · ${p2(t.getDate())}/${p2(t.getMonth() + 1)}`;
+}
+function renderSearch(acts = active()) {
+  const toks = S.q.toLowerCase().normalize('NFC').split(/\s+/).filter(Boolean);
+  if (!toks.length) { $('#searchList').innerHTML = '<div class="empty">Gõ dòng máy, RAM, nguồn bán… để tìm trong mọi tin đang có.</div>'; return; }
+  const hit = acts.filter(l => { const h = [l.code, l.chip, l.source, l.cond, l.cpugpu, l.screen && l.screen + '"', l.screen && l.screen + ' inch', l.seller, l.note, l.battery && 'pin ' + l.battery].join(' ').toLowerCase(); return toks.every(k => h.includes(k)); })
+    .sort((a, b) => a.price - b.price);
+  $('#searchList').innerHTML = hit.length ? `<div class="ghead"><span>${hit.length} tin</span><small>giá thấp → cao</small></div><div class="group">${hit.slice(0, 100).map(l => listingRow(l)).join('')}</div>` : '<div class="empty">Không thấy tin nào khớp.</div>';
+}
+
+// Biểu đồ lịch sử giá thấp nhất (bước) + đường giá trần
+function chart(h, cap) {
+  if (h.length < 2) return '<div class="sub" style="padding:4px 16px 12px">Cần thêm vài ngày quét để vẽ lịch sử giá.</div>';
+  const W = 600, H = 170, P = 24, vals = h.map(p => p[1]).concat(cap ? [cap] : []);
+  const lo = Math.min(...vals) * .98, hi = Math.max(...vals) * 1.02;
+  const x = i => P + i / (h.length - 1) * (W - 2 * P), y = v => H - P - (v - lo) / (hi - lo) * (H - 2 * P);
+  let d = `M${x(0)},${y(h[0][1])}`;
+  for (let i = 1; i < h.length; i++) d += ` H${x(i)} V${y(h[i][1])}`;
+  const last = h[h.length - 1];
+  return `<div class="chart"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Lịch sử giá thấp nhất">
+    <defs><linearGradient id="fade" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="var(--accent)"/><stop offset="1" stop-color="var(--accent)" stop-opacity="0"/></linearGradient></defs>
+    ${cap ? `<line class="cap" x1="${P}" x2="${W - P}" y1="${y(cap)}" y2="${y(cap)}"/><text x="${W - P}" y="${y(cap) - 5}" text-anchor="end">trần ${tr(cap)}</text>` : ''}
+    <path class="ar" d="${d} V${H - P} H${x(0)} Z"/><path class="ln" d="${d}"/>
+    <circle class="dot" cx="${x(h.length - 1)}" cy="${y(last[1])}" r="4.5"/>
+    <text x="${P}" y="${H - 6}">${esc(dmy(h[0][0]) || 'trước')}</text><text x="${W - P}" y="${H - 6}" text-anchor="end">${esc(dmy(last[0]))} · ${tr(last[1])}</text>
+  </svg></div>`;
+}
+
+function openCfg(code) {
+  const t = S.data.targets.find(x => x.code === code), list = active().filter(l => l.code === code).sort((a, b) => a.price - b.price), s = stats(list);
+  const ok = s && s.min <= t.cap;
+  $('#dlgBody').innerHTML = `<div class="dlg-h"><div><div class="sub">${esc(t.chip)} · ${esc((t.screens || []).join('", '))}" · cần ${esc(t.need)}</div><h2 id="dlgTitle">${esc(t.code)}</h2></div><button class="close" data-close aria-label="Đóng">✕</button></div>
+    <div class="big">${s ? vnd(s.min) : 'Chưa có tin'}</div>
+    <span class="pill ${ok ? 'ok' : 'warn'}">${s ? ok ? `Thấp hơn trần ${tr(t.cap - s.min)}` : `Cao hơn trần ${tr(s.min - t.cap)}` : 'Trần ' + tr(t.cap)}</span>
+    ${s ? `<div class="stats"><div><span>Số tin</span><b>${s.n}</b></div><div><span>Trung vị</span><b>${tr(s.med)}</b></div><div><span>Trung bình</span><b>${tr(s.avg)}</b></div><div><span>Cao nhất</span><b>${tr(s.max)}</b></div></div>` : ''}
+    <div class="sec"><h3>Giá thấp nhất theo ngày</h3>${chart((S.data.history || {})[code] || [], t.cap)}</div>
+    <div class="sec"><h3>Tin đang bán</h3>${list.map(l => listingRow(l, l.source + (l.cond ? ' · ' + l.cond : ''))).join('') || '<div class="sub" style="padding:4px 16px 14px">Không có tin trong cửa sổ thống kê.</div>'}</div>`;
+  show();
+}
+function openSettings() {
+  const theme = document.documentElement.dataset.theme || 'auto';
+  $('#dlgBody').innerHTML = `<div class="dlg-h"><h2 id="dlgTitle">Cài đặt</h2><button class="close" data-close aria-label="Đóng">✕</button></div>
+    <div class="sec"><div class="set"><span>Giao diện</span><div class="seg" id="themeSeg">${[['auto', 'Tự động'], ['light', 'Sáng'], ['dark', 'Tối']].map(([v, l]) => `<button data-theme="${v}" aria-pressed="${theme === v}">${l}</button>`).join('')}</div></div>
+    <label class="set"><span>Độ mờ của kính<div class="sub">Trái: trong suốt · Phải: mờ đục</div></span><input type="range" id="tint" min="0" max="1" step="0.05" value="${getComputedStyle(document.documentElement).getPropertyValue('--tint').trim() || .35}"></label></div>
+    <div class="sec"><a class="row" href="${SHEET}" target="_blank" rel="noopener"><div class="t">Mở Google Sheet dữ liệu</div><span class="chev">›</span></a>
+    <a class="row" href="https://github.com/HienPhuong99/MacbookPrice/blob/main/HUONG-DAN-PHIM-TAT.md" target="_blank" rel="noopener"><div class="t">Cài Phím tắt cho iPhone</div><span class="chev">›</span></a></div>
+    <p class="sub" style="margin:14px 4px 0">Giá lấy từ sheet "Dò giá MacBook 2027", quét tự động 9:30 sáng mỗi ngày. Thêm vào Màn hình chính: Safari → Chia sẻ → Thêm vào MH chính.</p>`;
+  show();
+}
+
+// Sheet: mở/đóng có chuyển động, vuốt xuống để đóng
+const dlg = $('#dlg');
+function show() { dlg.classList.remove('closing'); dlg.style.transform = ''; if (!dlg.open) dlg.showModal(); dlg.scrollTop = 0; }
+function hide() { if (!dlg.open || dlg.classList.contains('closing')) return; dlg.style.transform = ''; dlg.classList.add('closing'); setTimeout(() => { dlg.close(); dlg.classList.remove('closing'); }, 260); }
+dlg.addEventListener('click', e => { if (e.target === dlg || e.target.closest('[data-close]')) hide(); });
+dlg.addEventListener('cancel', e => { e.preventDefault(); hide(); });
+let drag = null;
+dlg.addEventListener('pointerdown', e => { if (dlg.scrollTop <= 0 && e.target.closest('.dlg-h,.dlg') && !e.target.closest('a,button,input')) drag = { y: e.clientY, dy: 0 }; });
+addEventListener('pointermove', e => { if (!drag) return; drag.dy = Math.max(0, e.clientY - drag.y); dlg.style.transform = `translate3d(0,${drag.dy}px,0)`; });
+addEventListener('pointerup', () => { if (!drag) return; const far = drag.dy > 110; drag = null; if (far) hide(); else { dlg.style.transition = 'transform .3s var(--ios)'; dlg.style.transform = ''; setTimeout(() => dlg.style.transition = '', 300); } });
+dlg.addEventListener('input', e => { if (e.target.id === 'tint') { document.documentElement.style.setProperty('--tint', e.target.value); try { localStorage.setItem('tint', e.target.value); } catch {} } });
+dlg.addEventListener('click', e => {
+  const b = e.target.closest('[data-theme]'); if (!b) return;
+  const v = b.dataset.theme;
+  if (v === 'auto') delete document.documentElement.dataset.theme; else document.documentElement.dataset.theme = v;
+  try { v === 'auto' ? localStorage.removeItem('theme') : localStorage.setItem('theme', v); } catch {}
+  b.parentElement.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x === b));
+});
+
+// Thanh tab + thấu kính trượt
+const lens = $('#lens');
+function moveLens(jelly) {
+  const b = $(`.tab[data-tab="${S.tab}"]`);
+  lens.style.width = b.offsetWidth + 'px'; lens.style.transform = `translateX(${b.offsetLeft - 4}px)`;
+  if (jelly) { lens.classList.remove('jelly'); void lens.offsetWidth; lens.classList.add('jelly'); }
+}
+function setTab(tab, jelly) {
+  S.tab = tab; save();
+  document.querySelectorAll('.tab').forEach(b => b.setAttribute('aria-selected', b.dataset.tab === tab));
+  for (const v of ['cfg', 'deal', 'search']) $('#v-' + v).hidden = v !== tab;
+  $('#tabbar').classList.remove('mini');
+  requestAnimationFrame(() => moveLens(jelly));
+  if (tab === 'search') setTimeout(() => $('#q').focus({ preventScroll: true }), 60);
+  scrollTo({ top: 0 });
+}
+$('#tabbar').addEventListener('click', e => { const b = e.target.closest('.tab'); if (b && b.dataset.tab !== S.tab) setTab(b.dataset.tab, true); });
+addEventListener('resize', () => moveLens());
+let lastY = 0;
+addEventListener('scroll', () => {
+  const y = scrollY;
+  document.documentElement.classList.toggle('scrolled', y > 24);
+  $('#tabbar').classList.toggle('mini', y > lastY && y > 120);
+  lastY = y;
+}, { passive: true });
+
+$('#chips').addEventListener('click', e => {
+  const b = e.target.closest('.chip'); if (!b) return;
+  if (b.dataset.k === 'cond') S.cond = b.dataset.v; else S.chip = S.chip === b.dataset.v ? 'all' : b.dataset.v;
+  save(); render();
+});
+$('#cfgList').addEventListener('click', e => { const r = e.target.closest('[data-code]'); if (r) openCfg(r.dataset.code); });
+$('#q').addEventListener('input', e => { S.q = e.target.value; renderSearch(); });
+$('#openSet').addEventListener('click', openSettings);
+$('#refresh').addEventListener('click', () => load(true));
+
+async function load(manual) {
+  const btn = $('#refresh'); btn.classList.add('spin'); btn.disabled = true;
+  try {
+    const r = await fetch('data/macbook.json?_=' + Date.now(), { cache: 'no-store' });
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    S.data = await r.json();
+    $('#err').hidden = true;
+    if (!manual) document.body.classList.add('intro');
+    render();
+    setTimeout(() => document.body.classList.remove('intro'), 900);
+  } catch (e) {
+    $('#err').hidden = false; $('#err').textContent = 'Không tải được dữ liệu giá (' + e.message + '). Kéo xuống hoặc bấm ⟳ để thử lại.';
+    $('#status').textContent = 'Lỗi tải';
+  } finally { btn.classList.remove('spin'); btn.disabled = false; }
+}
+setTab(['cfg', 'deal', 'search'].includes(S.tab) ? S.tab : 'cfg');
+if (location.hash === '#deal' || location.hash === '#search') setTab(location.hash.slice(1));
+load();
+</script>
+</body>
+</html>
