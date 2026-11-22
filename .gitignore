@@ -1,0 +1,15 @@
+# File riêng tư / log chat AI — KHÔNG commit
+chat.md
+Chat.md
+*.chat.md
+*.archive.md
+AGENTS.md
+CLAUDE.md
+GEMINI.md
+.claude/settings.local.json
+.claude/launch.json
+.synapse/
+.env*
+apps-script/.clasp.json
+node_modules/
+__pycache__/
