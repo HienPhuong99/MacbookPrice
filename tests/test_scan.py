@@ -148,6 +148,21 @@ class ScanMacbookTest(unittest.TestCase):
                 [['2026-11-22', 25500000], ['2026-11-23', 24500000]],
             )
 
+            # summary.txt cho Phím tắt iPhone
+            with open(os.path.join(tmp, 'summary.txt'), encoding='utf-8') as f:
+                lines = f.read().splitlines()
+            self.assertEqual(lines[0], 'Giá MacBook · 09:30 23/11')
+            self.assertEqual(lines[1], '✅ M1 Pro 32/512: 24,5tr (QMac Store) ▼1tr')
+            self.assertEqual(lines[2], 'Deal dưới trần: 2 tin')
+            self.assertLessEqual(len(lines), 12)
+
+    def test_shop_listings_are_merged(self):
+        shop = {'id': 'SHOP-MacShop24h-1', 'first': '2026-11-22', 'last': '2026-11-22', 'srcType': 'Shop tự quét', 'source': 'MacShop24h',
+                'code': 'M1 Pro | 32GB | 512GB', 'price': 23_000_000}
+        d = scan.build_dataset(SAMPLE_LOG_CSV, SAMPLE_TARGETS_CSV, SAMPLE_SETTINGS_CSV, '2026-11-22T09:30:00+07:00', extra_listings=[shop])
+        self.assertIn('SHOP-MacShop24h-1', [x['id'] for x in d['listings']])
+        self.assertEqual(d['history']['M1 Pro | 32GB | 512GB'], [['2026-11-22', 23000000]])
+
 
 if __name__ == '__main__':
     unittest.main()

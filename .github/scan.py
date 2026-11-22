@@ -286,10 +286,40 @@ def update_history(prev_history, listings, scan_date_iso, window_days=DEFAULT_WI
     return history
 
 
-def build_dataset(log_csv, targets_csv, settings_csv, now_iso, prev_history=None):
+def tr(v):
+    """24000000 -> '24tr', 28990000 -> '28,99tr'."""
+    return f'{round(v / 1e6, 2):g}'.replace('.', ',') + 'tr'
+
+
+def build_summary(payload, max_lines=12):
+    """Chữ thuần cho Phím tắt iPhone: giá thấp nhất từng cấu hình (ưu tiên dưới trần) + số deal."""
+    t = datetime.datetime.fromisoformat(payload['time'])
+    since = (t.date() - datetime.timedelta(days=payload['settings']['windowDays'])).isoformat()
+    active = [l for l in payload['listings'] if l.get('price') and (l.get('last') or '') >= since]
+    rows, deals = [], 0
+    for tg in payload['targets']:
+        mine = sorted((l for l in active if l['code'] == tg['code']), key=lambda l: l['price'])
+        if not mine:
+            continue
+        cap = tg.get('cap') or 0
+        deals += sum(1 for l in mine if cap and l['price'] <= cap)
+        best = mine[0]
+        h = payload['history'].get(tg['code']) or []
+        d = h[-1][1] - h[-2][1] if len(h) >= 2 else 0
+        arrow = f" {'▼' if d < 0 else '▲'}{tr(abs(d))}" if d else ''
+        name = f"{tg['chip']} {tg['ram']}/{tg['ssd'] // 1024 if tg['ssd'] >= 1024 else tg['ssd']}{'TB' if tg['ssd'] >= 1024 else ''}"
+        under = bool(cap) and best['price'] <= cap
+        rows.append((not under, best['price'] / cap if cap else 9, f"{'✅' if under else '•'} {name}: {tr(best['price'])} ({best['source']}){arrow}"))
+    rows.sort()
+    lines = [f'Giá MacBook · {t:%H:%M %d/%m}'] + [r[2] for r in rows[:max_lines - 3]]
+    lines += [f'Deal dưới trần: {deals} tin', 'hienphuong99.github.io/MacbookPrice/#deal']
+    return '\n'.join(lines) + '\n'
+
+
+def build_dataset(log_csv, targets_csv, settings_csv, now_iso, prev_history=None, extra_listings=None):
     settings = parse_settings(settings_csv)
     targets = parse_targets(targets_csv)
-    listings = parse_listings(log_csv)
+    listings = parse_listings(log_csv) + list(extra_listings or [])
     if not settings['includeFacebook']:
         listings = [l for l in listings if not is_facebook(l)]
     scan_date_iso = now_iso[:10]
@@ -322,7 +352,7 @@ def fetch_sheet_csv(sheet_id, tab_name, timeout=30):
     return text
 
 
-def scan_to_file(log_csv, targets_csv, settings_csv, now_iso, out_path=OUT_PATH):
+def scan_to_file(log_csv, targets_csv, settings_csv, now_iso, out_path=OUT_PATH, extra_listings=None):
     prev_history = {}
     if os.path.exists(out_path):
         try:
@@ -331,13 +361,24 @@ def scan_to_file(log_csv, targets_csv, settings_csv, now_iso, out_path=OUT_PATH)
         except (OSError, ValueError):
             prev_history = {}
 
-    payload = build_dataset(log_csv, targets_csv, settings_csv, now_iso, prev_history=prev_history)
+    payload = build_dataset(log_csv, targets_csv, settings_csv, now_iso, prev_history=prev_history, extra_listings=extra_listings)
     parent = os.path.dirname(out_path)
     if parent:
         os.makedirs(parent, exist_ok=True)
     with open(out_path, 'w', encoding='utf-8', newline='\n') as f:
         json.dump(payload, f, ensure_ascii=False, separators=(',', ':'))
+    with open(os.path.join(parent or '.', 'summary.txt'), 'w', encoding='utf-8', newline='\n') as f:
+        f.write(build_summary(payload))
     return out_path, payload
+
+
+def load_shop_listings(path=os.path.join('data', 'shops.json')):
+    """Tin do scan_shops.py tự quét (nếu có)."""
+    try:
+        with open(path, encoding='utf-8') as f:
+            return json.load(f).get('listings') or []
+    except (OSError, ValueError):
+        return []
 
 
 def main():
@@ -345,7 +386,9 @@ def main():
     log_csv = fetch_sheet_csv(SHEET_ID, TAB_LOG)
     targets_csv = fetch_sheet_csv(SHEET_ID, TAB_TARGETS)
     settings_csv = fetch_sheet_csv(SHEET_ID, TAB_SETTINGS)
-    out_path, payload = scan_to_file(log_csv, targets_csv, settings_csv, now_iso, out_path=OUT_PATH)
+    shops = load_shop_listings()
+    out_path, payload = scan_to_file(log_csv, targets_csv, settings_csv, now_iso, out_path=OUT_PATH, extra_listings=shops)
+    print(f'+ {len(shops)} shop listings')
     print(
         f'{out_path}: {len(payload["targets"])} targets, '
         f'{len(payload["listings"])} listings, '
