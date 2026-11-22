@@ -80,6 +80,13 @@ class ScanMacbookTest(unittest.TestCase):
             self.assertNotIn('profile', item)
             self.assertNotIn('image', item)
 
+    def test_marketplace_seller_hidden_and_facebook_dropped(self):
+        row = '"TIN-009","16/11/2026","16/11/2026","Có","Web tự dò","Chợ Tốt","M1 Pro | 32GB | 512GB","M1 Pro","","32","512","14","Cũ","","","","24.000.000 đ","24.000.000 đ","","Nguyễn Văn A","https://www.chotot.com/1.htm","","","",""\n'
+        tin9 = next(x for x in scan.parse_listings(SAMPLE_LOG_CSV + row) if x['id'] == 'TIN-009')
+        self.assertEqual(tin9['seller'], '')
+        data = scan.build_dataset(SAMPLE_LOG_CSV, SAMPLE_TARGETS_CSV, SAMPLE_SETTINGS_CSV, '2026-11-22T09:30:00+07:00')
+        self.assertNotIn('TIN-004', [x['id'] for x in data['listings']])
+
     def test_targets_filters_disabled(self):
         targets = scan.parse_targets(SAMPLE_TARGETS_CSV)
         self.assertEqual(len(targets), 2)

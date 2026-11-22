@@ -184,6 +184,17 @@ def parse_targets(csv_text):
     return targets
 
 
+MARKETPLACE_RE = re.compile(r'chợ tốt|chotot|facebook|\bfb\b|marketplace', re.IGNORECASE)
+
+
+def is_facebook(item):
+    return 'facebook' in f"{item.get('srcType', '')} {item.get('source', '')}".lower()
+
+
+def is_marketplace(item):
+    return bool(MARKETPLACE_RE.search(f"{item.get('srcType', '')} {item.get('source', '')}"))
+
+
 def parse_listings(csv_text):
     rows = _read_csv_rows(csv_text)
     if len(rows) < 2:
@@ -226,6 +237,9 @@ def parse_listings(csv_text):
             'flag': _cell(r, hmap, 'cờ'),
             'note': _cell(r, hmap, 'ghi chú'),
         }
+        # Chợ / Facebook là người bán cá nhân -> không công khai tên
+        if is_marketplace(item):
+            item['seller'] = ''
         # ID trùng -> giữ dòng cuối
         if item_id in by_id:
             del by_id[item_id]
@@ -249,11 +263,8 @@ def update_history(prev_history, listings, scan_date_iso, window_days=DEFAULT_WI
         last = item.get('last')
         if not code or price is None or price <= 0 or not last or last < cutoff_iso:
             continue
-        if not include_facebook:
-            src_type = (item.get('srcType') or '').lower()
-            source = (item.get('source') or '').lower()
-            if 'facebook' in src_type or 'facebook' in source:
-                continue
+        if not include_facebook and is_facebook(item):
+            continue
         prev_min = min_by_code.get(code)
         if prev_min is None or price < prev_min:
             min_by_code[code] = price
@@ -279,6 +290,8 @@ def build_dataset(log_csv, targets_csv, settings_csv, now_iso, prev_history=None
     settings = parse_settings(settings_csv)
     targets = parse_targets(targets_csv)
     listings = parse_listings(log_csv)
+    if not settings['includeFacebook']:
+        listings = [l for l in listings if not is_facebook(l)]
     scan_date_iso = now_iso[:10]
     history = update_history(
         prev_history,
