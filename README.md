@@ -1,9 +1,9 @@
 # Dò giá MacBook
 
-Web theo dõi giá MacBook (mới & cũ) theo cấu hình mục tiêu, giao diện kiểu iOS (Liquid Glass), có Phím tắt iPhone.
+Web theo dõi giá MacBook (mới & cũ) theo cấu hình mục tiêu, giao diện kính kiểu iOS 27, có Phím tắt iPhone.
 
-- Dữ liệu: Google Sheet "Dò giá MacBook 2027" → GitHub Actions quét mỗi sáng → `data/macbook.json`.
-- Web: `index.html` (1 file, không build) — https://hienphuong99.github.io/MacbookPrice/
-- iPhone: Phím tắt / widget Scriptable trong `iphone/`.
+- **Web:** https://hienphuong99.github.io/MacbookPrice/ — Safari → Chia sẻ → Thêm vào MH chính.
+- **Phím tắt iPhone:** xem [HUONG-DAN-PHIM-TAT.md](HUONG-DAN-PHIM-TAT.md) (2 tác vụ, không cần app) · widget Scriptable: [`iphone/widget.js`](iphone/widget.js).
+- **Dữ liệu:** GitHub Actions 9:30 sáng mỗi ngày → `.github/scan_shops.py` (tự quét shop có JSON) + `.github/scan.py` (Google Sheet "Dò giá MacBook 2027") → `data/macbook.json`, `data/summary.txt`.
 
-Đang xây dựng.
+Kiểm tra: `python -m unittest discover tests` · `node iphone/widget.js`
