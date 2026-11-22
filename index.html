@@ -396,7 +396,7 @@ function setTab(tab, jelly) {
   for (const v of ['cfg', 'deal', 'search']) $('#v-' + v).hidden = v !== tab;
   $('#tabbar').classList.remove('mini');
   requestAnimationFrame(() => moveLens(jelly));
-  if (tab === 'search') setTimeout(() => $('#q').focus({ preventScroll: true }), 60);
+  if (tab === 'search' && jelly) $('#q').focus({ preventScroll: true }); // gọi ngay trong cú chạm thì iOS mới bật bàn phím
   scrollTo({ top: 0 });
 }
 $('#tabbar').addEventListener('click', e => { const b = e.target.closest('.tab'); if (b && b.dataset.tab !== S.tab) setTab(b.dataset.tab, true); });
