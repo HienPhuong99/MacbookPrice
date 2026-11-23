@@ -336,8 +336,9 @@ def build_menu(payload, per_cfg=5):
                       key=lambda l: (bool(l.get('flag')), l['price']))  # tin sạch lên trước
         if not mine:
             continue
+        shown = mine[:per_cfg]
         items = {}
-        for l in mine[:per_cfg]:
+        for l in shown:
             label = f"{tr(l['price'])} · {l['source']}"
             label += f" · {l['cond']}" if l.get('cond') else ''
             label += f' {l["screen"]}"' if l.get('screen') else ''
@@ -345,7 +346,7 @@ def build_menu(payload, per_cfg=5):
             while label in items:
                 label += ' ·'
             items[label] = l['url']
-        menu[f"{short_name(tg)} · {tr(min(l['price'] for l in mine))}"] = items
+        menu[f"{short_name(tg)} · {tr(min(l['price'] for l in shown))}"] = items
     return menu
 
 
@@ -370,7 +371,7 @@ def build_summary(payload, max_lines=12, new=None):
     rows.sort()
     head = [f'Giá MacBook · {t:%H:%M %d/%m}']
     if new:
-        head.append(f"🆕 {len(new)} deal mới: {deal_text(new[0], payload['targets'])}")
+        head.append(f"🆕 {len(new)} deal mới · {deal_text(new[0], payload['targets'])}")
     lines = head + [r[2] for r in rows[:max_lines - len(head) - 2]]
     lines += [f'Deal dưới trần: {deals} tin', 'hienphuong99.github.io/MacbookPrice/#deal']
     return '\n'.join(lines) + '\n'

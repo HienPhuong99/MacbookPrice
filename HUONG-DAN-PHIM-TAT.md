@@ -1,6 +1,6 @@
 # Phím tắt iPhone "Giá Mac"
 
-Bấm 1 lần (hoặc nói **"Hey Siri, giá Mac"**) là thấy giá MacBook rẻ nhất của từng cấu hình mục tiêu và số deal dưới giá trần. Dữ liệu tự cập nhật 9:30 sáng mỗi ngày.
+Bấm 1 lần (hoặc nói **"Hey Siri, giá Mac"**) là thấy giá MacBook rẻ nhất của từng cấu hình mục tiêu và số deal dưới giá trần. Dữ liệu tự cập nhật 9:30 và 21:30 mỗi ngày.
 
 ## Cách 1 — Phím tắt thuần (không cần cài app, 1 phút)
 

@@ -152,7 +152,7 @@ class ScanMacbookTest(unittest.TestCase):
             with open(os.path.join(tmp, 'summary.txt'), encoding='utf-8') as f:
                 lines = f.read().splitlines()
             self.assertEqual(lines[0], 'Giá MacBook · 09:30 23/11')
-            self.assertEqual(lines[1], '🆕 1 deal mới: M1 Pro 32/512: 24,5tr (QMac Store)')  # vừa giảm giá
+            self.assertEqual(lines[1], '🆕 1 deal mới · M1 Pro 32/512: 24,5tr (QMac Store)')  # vừa giảm giá
             self.assertEqual(lines[2], '✅ M1 Pro 32/512: 24,5tr (QMac Store) ▼1tr')
             self.assertEqual(lines[3], 'Deal dưới trần: 2 tin')
             self.assertLessEqual(len(lines), 12)
@@ -163,6 +163,18 @@ class ScanMacbookTest(unittest.TestCase):
             items = menu['M1 Pro 32/512 · 24,5tr']
             self.assertTrue(next(iter(items)).startswith('24,5tr · QMac Store'))
             self.assertTrue(all(u.startswith('http') for u in items.values()))
+
+    def test_menu_header_price_matches_shown_items_only(self):
+        # Tin dính cờ rẻ hơn nhưng bị đẩy ra ngoài top 5 -> giá tiêu đề phải khớp tin thực sự hiện
+        d = scan.build_dataset(SAMPLE_LOG_CSV, SAMPLE_TARGETS_CSV, SAMPLE_SETTINGS_CSV, '2026-11-22T09:30:00+07:00')
+        base = dict(d['listings'][0], code='M1 Pro | 32GB | 512GB', last='2026-11-22', flag='')
+        d['listings'] = [
+            dict(base, id=f'CLEAN-{i}', price=30_000_000 + i * 500_000, url=f'https://x/{i}')
+            for i in range(6)
+        ] + [dict(base, id='MDM-CHEAP', price=20_000_000, flag='mdm', url='https://x/mdm')]
+        menu = scan.build_menu(d, per_cfg=5)
+        self.assertIn('M1 Pro 32/512 · 30tr', menu)
+        self.assertNotIn('M1 Pro 32/512 · 20tr', menu)
 
     def test_notify_only_clean_new_deals_from_known_sources(self):
         d = scan.build_dataset(SAMPLE_LOG_CSV, SAMPLE_TARGETS_CSV, SAMPLE_SETTINGS_CSV, '2026-11-22T09:30:00+07:00')
