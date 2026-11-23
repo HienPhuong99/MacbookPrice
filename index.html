@@ -128,10 +128,13 @@ button{font:inherit;color:inherit;cursor:pointer;background:none;border:0;paddin
 .mini .tab{padding:9px 12px} .mini .tab span{opacity:0;max-height:0}
 
 /* Sheet chi tiết */
-dialog{padding:0;width:min(680px,calc(100% - 24px));max-height:calc(100% - 24px);border-radius:34px;color:var(--text);--ga:calc(.6 + var(--tint)*.36);overscroll-behavior:contain}
+dialog{padding:0;width:min(680px,calc(100% - 24px));max-height:calc(100% - 24px);border-radius:34px;color:var(--text);--ga:calc(.93 + var(--tint)*.06);overscroll-behavior:contain}
+/* Trình duyệt không làm mờ được nền -> kính đục để chữ phía sau không xuyên qua */
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){:root{--tint:1!important}dialog{--ga:.97}}
 dialog[open]{animation:pop .38s var(--ios)}
 dialog.closing{transform:translate3d(0,16px,0) scale(.95);opacity:0;transition:transform .24s var(--ios),opacity .2s}
-dialog::backdrop{background:rgba(0,0,0,.24);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px)}
+dialog:focus{outline:none}
+dialog::backdrop{background:rgba(0,0,0,.38);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px)}
 dialog.closing::backdrop{opacity:0;transition:opacity .2s}
 @keyframes pop{from{opacity:0;transform:translate3d(0,22px,0) scale(.94)}}
 .dlg{padding:18px 18px 22px}
@@ -219,7 +222,7 @@ dialog.closing{transform:translate3d(0,100%,0);opacity:1;transition:transform .2
   <button class="tab" role="tab" data-tab="search" aria-selected="false"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><span>Tìm kiếm</span></button>
 </nav>
 
-<dialog id="dlg" aria-labelledby="dlgTitle"><div class="dlg" id="dlgBody"></div></dialog>
+<dialog id="dlg" aria-labelledby="dlgTitle" autofocus><div class="dlg" id="dlgBody"></div></dialog>
 
 <script>
 const $ = s => document.querySelector(s);
