@@ -220,6 +220,7 @@ dialog.closing{transform:translate3d(0,100%,0);opacity:1;transition:transform .2
   </section>
   <section id="v-deal" role="tabpanel" aria-labelledby="tab-deal" hidden>
     <h2>Deal dưới giá trần</h2>
+    <div class="chips" id="dealChips" role="group" aria-label="Lọc deal"></div>
     <div id="dealList"></div>
   </section>
   <section id="v-search" role="tabpanel" aria-labelledby="tab-search" hidden>
@@ -307,7 +308,7 @@ function lowBadge(code, curMin) {
   const firstDate = h[0][0] ? new Date(h[0][0]) : null;
   const spanDays = firstDate && !isNaN(firstDate) ? Math.round((ref - firstDate) / 864e5) : 0;
   for (const days of [90, 30]) {
-    if (days === 90 && spanDays < 60) continue;
+    if (spanDays < days * 2 / 3) continue;  // lịch sử mới 1-2 ngày thì chưa được gọi là "đáy 30 ngày"
     const pts = pointsInRange(h, days);
     if (pts.length < 2) continue;
     const vals = pts.map(p => p[1]);
@@ -384,7 +385,8 @@ function render() {
     return `<div class="ghead"><span>${esc(g)}</span><small>${esc(screensLabel(byCode[shown.find(t => t.chip === g).code].screens))}</small></div><div class="group" style="--i:${gi + 4}">${rows}</div>`;
   }).join('') || '<div class="empty">Không có cấu hình nào khớp bộ lọc.</div>';
 
-  // Deal
+  // Deal (chip "Ẩn MDM/lỗi" ở cả tab Deal — nơi cần lọc nhất)
+  $('#dealChips').innerHTML = `<button type="button" class="chip" data-k="clean" data-v="1" aria-pressed="${S.clean}">Ẩn MDM/lỗi</button>`;
   $('#dealList').innerHTML = deals.length ? `<div class="group">${deals.map(l => {
     const pct = Math.round((1 - l.price / byCode[l.code].cap) * 100);
     const lb = lows[l.code] && per[l.code] && l.price === per[l.code].min ? lows[l.code] : null;
@@ -521,13 +523,13 @@ addEventListener('scroll', () => {
   lastY = y;
 }, { passive: true });
 
-$('#chips').addEventListener('click', e => {
+['#chips', '#dealChips'].forEach(sel => $(sel).addEventListener('click', e => {
   const b = e.target.closest('.chip'); if (!b) return;
   if (b.dataset.k === 'cond') S.cond = b.dataset.v;
   else if (b.dataset.k === 'clean') S.clean = !S.clean;
   else S.chip = S.chip === b.dataset.v ? 'all' : b.dataset.v;
   save(); render();
-});
+}));
 $('#cfgList').addEventListener('click', e => { const r = e.target.closest('[data-code]'); if (r) openCfg(r.dataset.code); });
 $('#q').addEventListener('input', e => { S.q = e.target.value; renderSearch(); });
 $('#openSet').addEventListener('click', openSettings);
