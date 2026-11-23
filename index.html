@@ -306,7 +306,7 @@ function render() {
   }).join('') || '<div class="empty">Không có cấu hình nào khớp bộ lọc.</div>';
 
   // Deal
-  $('#dealList').innerHTML = deals.length ? `<div class="group">${deals.slice(0, 60).map(l => {
+  $('#dealList').innerHTML = deals.length ? `<div class="group">${deals.map(l => {
     const pct = Math.round((1 - l.price / byCode[l.code].cap) * 100);
     return listingRow(l, l.code).replace('<div class="t">', `<div class="t"><span class="pill ok">−${pct}%</span> `);
   }).join('')}</div>` : '<div class="empty">Chưa có tin nào dưới giá trần. Phím tắt sẽ báo khi có.</div>';
@@ -319,7 +319,9 @@ function render() {
 function renderSearch(acts = active()) {
   const toks = S.q.toLowerCase().normalize('NFC').split(/\s+/).filter(Boolean);
   if (!toks.length) { $('#searchList').innerHTML = '<div class="empty">Gõ dòng máy, RAM, nguồn bán… để tìm trong mọi tin đang có.</div>'; return; }
-  const hit = acts.filter(l => { const h = [l.code, l.chip, l.source, l.cond, l.cpugpu, l.screen && l.screen + '"', l.screen && l.screen + ' inch', l.seller, l.note, l.battery && 'pin ' + l.battery].join(' ').toLowerCase(); return toks.every(k => h.includes(k)); })
+  // Số đứng riêng ("16") phải khớp nguyên từ, để không dính "16GPU"
+  const tests = toks.map(k => /^\d+$/.test(k) ? (h => new RegExp(`(^|[^\\w])${k}(?!\\w)`).test(h)) : (h => h.includes(k)));
+  const hit = acts.filter(l => { const h = [l.code, l.chip, l.source, l.cond, l.cpugpu, l.screen && l.screen + '"', l.screen && l.screen + ' inch', l.seller, l.battery && 'pin ' + l.battery].join(' ').toLowerCase(); return tests.every(t => t(h)); })
     .sort((a, b) => a.price - b.price);
   $('#searchList').innerHTML = hit.length ? `<div class="ghead"><span>${hit.length} tin</span><small>giá thấp → cao</small></div><div class="group">${hit.slice(0, 100).map(l => listingRow(l)).join('')}</div>` : '<div class="empty">Không thấy tin nào khớp.</div>';
 }
