@@ -22,8 +22,8 @@
 :root{color-scheme:light;--tint:.35;interpolate-size:allow-keywords;
 --spring:linear(0,.009,.035 2.1%,.141,.281 6.7%,.723 12.9%,.938 16.7%,1.017,1.077,1.121,1.149 24.3%,1.159,1.163,1.161,1.154 29.9%,1.129 32.8%,1.051 39.6%,1.017 43.1%,.991,.977 51%,.974 53.8%,.975 57.1%,.997 69.8%,1.003 76.9%,1);--ios:cubic-bezier(.32,.72,0,1);
 --wall:#e8edf6;--b1:#7ec3ff;--b2:#c6a8ff;--b3:#ffc6a8;--b4:#9eeed3;
---text:#0b0b0f;--muted:rgba(60,60,67,.74);--faint:rgba(60,60,67,.5);--line:rgba(60,60,67,.14);--track:rgba(120,120,128,.13);
---accent:#007aff;--ok:#1f8f3a;--ok-bg:rgba(52,199,89,.16);--down:#0a6fe0;--up:#e5352b;--down-bg:rgba(0,122,255,.13);--up-bg:rgba(255,59,48,.13);--warn-bg:rgba(255,149,0,.18);--warn:#a85400;
+--text:#0b0b0f;--muted:rgba(45,45,52,.82);--faint:rgba(60,60,67,.56);--line:rgba(60,60,67,.14);--track:rgba(120,120,128,.13);
+--accent:#007aff;--accent-on:#0066d6;--ok:#146c2e;--ok-bg:rgba(52,199,89,.16);--down:#0a6fe0;--up:#e5352b;--down-bg:rgba(0,122,255,.13);--up-bg:rgba(255,59,48,.13);--warn-bg:rgba(255,149,0,.18);--warn:#944900;
 --g:255 255 255;--ga:calc(.42 + var(--tint)*.5);--bar-a:calc(.18 + var(--tint)*.24);--blur:calc(14px + var(--tint)*18px);
 --brd:rgba(255,255,255,.7);--bar-brd:rgba(255,255,255,.62);--edge:rgba(0,0,0,.09);--spec:rgba(255,255,255,.95);--spec-b:rgba(255,255,255,.58);--rim:rgba(255,255,255,.42);--sheen-t:rgba(255,255,255,.38);--sheen-b:rgba(255,255,255,.2);
 --sh:0 8px 28px rgba(40,50,90,.12);--sh-s:0 2px 8px rgba(40,50,90,.1);--bar-sh:inset 0 1.5px 1px var(--spec),inset 0 -1.5px 1.5px var(--spec-b),inset 0 0 12px var(--rim),0 0 0 .5px var(--edge),0 12px 32px rgba(20,30,60,.18);--lens:linear-gradient(180deg,rgba(255,255,255,.9),rgba(255,255,255,.6));--solid:#fff}
@@ -48,7 +48,7 @@
 html{scroll-padding-top:90px}
 body{margin:0;min-height:100vh;background:var(--wall);color:var(--text);font:16px/1.4 -apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI Variable","Segoe UI",system-ui,Roboto,sans-serif;-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent;overscroll-behavior-y:contain}
 body::before{content:"";position:fixed;inset:-18%;z-index:-1;pointer-events:none;background:radial-gradient(38% 32% at 18% 14%,var(--b1),transparent 70%),radial-gradient(34% 30% at 84% 16%,var(--b2),transparent 70%),radial-gradient(40% 36% at 74% 86%,var(--b3),transparent 70%),radial-gradient(36% 34% at 10% 84%,var(--b4),transparent 70%);transform:translateZ(0)}
-main{max-width:900px;margin:0 auto;padding:0 16px calc(110px + env(safe-area-inset-bottom))}
+main{max-width:900px;margin:0 auto;padding:0 max(16px,env(safe-area-inset-right)) calc(110px + env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left))}
 h1{font-size:32px;line-height:1.12;font-weight:700;letter-spacing:-.024em;margin:0;transform-origin:left center;transition:transform .34s var(--ios)}
 h2{font-size:22px;font-weight:700;letter-spacing:-.02em;margin:22px 4px 10px}
 a{color:var(--accent)}
@@ -79,7 +79,7 @@ button{font:inherit;color:inherit;cursor:pointer;background:none;border:0;paddin
 .chips{display:flex;gap:7px;overflow-x:auto;padding:4px 2px 10px;margin:0 -2px;scrollbar-width:none;overscroll-behavior-x:contain;scroll-snap-type:x proximity}
 .chips::-webkit-scrollbar{display:none}
 .chip{flex-shrink:0;white-space:nowrap;scroll-snap-align:start;border-radius:999px;padding:7px 15px;font-size:14px;font-weight:500;transition:transform .32s var(--ios)}
-.chip[aria-pressed=true]{background:color-mix(in srgb,var(--accent) 88%,transparent);color:#fff;border-color:rgba(255,255,255,.3)}
+.chip[aria-pressed=true]{background:var(--accent-on);color:#fff;border-color:rgba(255,255,255,.3)}
 
 .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:4px 0 6px}
 .kpi{border-radius:24px;padding:13px 16px;min-width:0}
@@ -166,7 +166,7 @@ dialog.closing::backdrop{opacity:0;transition:opacity .2s}
 input[type=range]{accent-color:var(--accent);width:150px}
 
 @media (max-width:640px){
-main{padding:0 12px calc(104px + env(safe-area-inset-bottom))}
+main{padding:0 max(12px,env(safe-area-inset-right)) calc(104px + env(safe-area-inset-bottom)) max(12px,env(safe-area-inset-left))}
 .top{top:max(8px,env(safe-area-inset-top));margin:8px 0 12px;padding:10px 10px 10px 14px;border-radius:24px}
 h1{font-size:27px} .brand img{width:32px;height:32px;border-radius:9px}
 .kpis{grid-template-columns:1fr 1fr;gap:8px} .kpi{padding:11px 14px;border-radius:20px} .kpi b{font-size:20px}
@@ -190,36 +190,38 @@ dialog.closing{transform:translate3d(0,100%,0);opacity:1;transition:transform .2
   <header class="top">
     <div class="brand">
       <img src="assets/apple-touch-icon.png" alt="" width="36" height="36">
-      <div style="min-width:0"><h1 id="title">Giá MacBook</h1><div class="sub" id="status">Đang tải…</div></div>
+      <div style="min-width:0"><h1 id="title">Giá MacBook</h1><div class="sub" id="status" aria-live="polite">Đang tải…</div></div>
     </div>
     <div class="acts">
-      <button type="button" class="btn icon" id="refresh" aria-label="Tải lại giá"><svg viewBox="0 0 24 24"><path d="M20 11a8 8 0 1 0-2.3 5.7M20 4v7h-7"/></svg></button>
-      <button type="button" class="btn icon" id="openSet" aria-label="Cài đặt giao diện"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button>
+      <button type="button" class="btn icon" id="refresh" aria-label="Tải lại giá"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M20 11a8 8 0 1 0-2.3 5.7M20 4v7h-7"/></svg></button>
+      <button type="button" class="btn icon" id="openSet" aria-label="Cài đặt giao diện"><svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button>
     </div>
   </header>
-  <div class="err" id="err" hidden></div>
+  <div class="err" id="err" role="alert" hidden></div>
 
-  <section id="v-cfg" role="tabpanel" aria-label="Cấu hình">
+  <section id="v-cfg" role="tabpanel" aria-labelledby="tab-cfg">
     <div class="kpis" id="kpis"></div>
     <div class="chips" id="chips" role="group" aria-label="Lọc"></div>
     <div id="cfgList"></div>
   </section>
-  <section id="v-deal" role="tabpanel" aria-label="Deal" hidden>
+  <section id="v-deal" role="tabpanel" aria-labelledby="tab-deal" hidden>
     <h2>Deal dưới giá trần</h2>
     <div id="dealList"></div>
   </section>
-  <section id="v-search" role="tabpanel" aria-label="Tìm kiếm" hidden>
-    <label class="field"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+  <section id="v-search" role="tabpanel" aria-labelledby="tab-search" hidden>
+    <label class="field"><svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
       <input id="q" type="search" placeholder="Tìm: m1 pro 16, chợ tốt, pin 90…" aria-label="Tìm tin MacBook" enterkeyhint="search" autocomplete="off"></label>
     <div id="searchList"></div>
   </section>
 </main>
 
-<nav class="tabbar" id="tabbar" role="tablist" aria-label="Chuyển mục">
-  <i class="lens" id="lens" aria-hidden="true"></i>
-  <button class="tab" role="tab" data-tab="cfg" aria-selected="true"><svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="11" rx="1.6"/><path d="M2 19h20"/></svg><span>Cấu hình</span></button>
-  <button class="tab" role="tab" data-tab="deal" aria-selected="false"><svg viewBox="0 0 24 24"><path d="M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8z"/><circle cx="7.5" cy="7.5" r="1.3"/></svg><span>Deal</span></button>
-  <button class="tab" role="tab" data-tab="search" aria-selected="false"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><span>Tìm kiếm</span></button>
+<nav aria-label="Điều hướng chính">
+  <div class="tabbar" id="tabbar" role="tablist" aria-label="Chuyển mục">
+    <i class="lens" id="lens" aria-hidden="true"></i>
+    <button type="button" class="tab" id="tab-cfg" role="tab" data-tab="cfg" aria-controls="v-cfg" aria-selected="true"><svg aria-hidden="true" viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="11" rx="1.6"/><path d="M2 19h20"/></svg><span>Cấu hình</span></button>
+    <button type="button" class="tab" id="tab-deal" role="tab" data-tab="deal" aria-controls="v-deal" aria-selected="false"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8z"/><circle cx="7.5" cy="7.5" r="1.3"/></svg><span>Deal</span></button>
+    <button type="button" class="tab" id="tab-search" role="tab" data-tab="search" aria-controls="v-search" aria-selected="false"><svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><span>Tìm kiếm</span></button>
+  </div>
 </nav>
 
 <dialog id="dlg" aria-labelledby="dlgTitle" autofocus><div class="dlg" id="dlgBody"></div></dialog>
@@ -239,7 +241,9 @@ const save = () => { try { localStorage.setItem('view', JSON.stringify({ cond: S
 
 // Tin còn thấy trong N ngày gần nhất (giống "Cửa sổ thống kê" của sheet)
 function active() {
-  const d = S.data, ref = new Date((d.time || '').slice(0, 10) || Date.now());
+  const d = S.data;
+  if (!d) return [];
+  const ref = new Date((d.time || '').slice(0, 10) || Date.now());
   const since = new Date(ref - (d.settings?.windowDays || WINDOW_DAYS) * 864e5).toISOString().slice(0, 10);
   return (d.listings || []).filter(l => l.price > 0 && (l.last || l.first || '') >= since
     && (S.cond === 'all' || (S.cond === 'new') === isNew(l.cond)));
@@ -264,10 +268,15 @@ function spark(code) {
   return `<svg class="spark ${c}" viewBox="0 0 56 24" aria-hidden="true"><path d="M${pts}"/></svg>`;
 }
 const chg = t => t && t.d ? `<small class="${t.cls}">${t.d < 0 ? '▼' : '▲'} ${tr(Math.abs(t.d))}</small>` : '';
+const screensLabel = arr => arr && arr.length ? arr.join('", ') + '"' : '';
 const listingSub = l => [l.source, l.cond, l.screen && l.screen + '"', l.cpugpu, l.battery && 'Pin ' + l.battery + '%', l.warranty && 'BH ' + l.warranty + 'th', l.last && 'thấy ' + dmy(l.last)].filter(Boolean).map(esc).join(' · ');
-const listingRow = (l, title) => `<a class="row" href="${esc(/^https?:\/\//.test(l.url) ? l.url : '#')}" target="_blank" rel="noopener">
-  <div style="min-width:0"><div class="t">${esc(title || l.code)}</div><div class="s">${listingSub(l)}</div></div>
-  <div class="r"><div class="price">${tr(l.price)}${l.list > l.price ? `<small class="flat"><s>${tr(l.list)}</s></small>` : ''}</div><span class="chev">›</span></div></a>`;
+const listingRow = (l, title) => {
+  const hasUrl = /^https?:\/\//.test(l.url || '');
+  const flag = l.flag ? ` <span class="pill warn">${esc(l.flag)}</span>` : '';
+  const body = `<div style="min-width:0"><div class="t">${esc(title || l.code)}${flag}</div><div class="s">${listingSub(l)}</div></div>
+  <div class="r"><div class="price">${tr(l.price)}${l.list > l.price ? `<small class="flat"><s>${tr(l.list)}</s></small>` : ''}</div>${hasUrl ? '<span class="chev" aria-hidden="true">›</span>' : ''}</div>`;
+  return hasUrl ? `<a class="row" href="${esc(l.url)}" target="_blank" rel="noopener">${body}</a>` : `<div class="row">${body}</div>`;
+};
 
 function render() {
   const d = S.data;
@@ -291,7 +300,7 @@ function render() {
   const chips = [...new Set(targets.map(t => t.chip))];
   if (S.chip !== 'all' && !chips.includes(S.chip)) S.chip = 'all';
   $('#chips').innerHTML = [['cond', 'all', 'Tất cả'], ['cond', 'new', 'Mới'], ['cond', 'used', 'Cũ'], ...chips.map(c => ['chip', c, c])]
-    .map(([k, v, label]) => `<button class="chip" data-k="${k}" data-v="${esc(v)}" aria-pressed="${k === 'cond' ? S.cond === v : S.chip === v}">${esc(label)}</button>`).join('');
+    .map(([k, v, label]) => `<button type="button" class="chip" data-k="${k}" data-v="${esc(v)}" aria-pressed="${k === 'cond' ? S.cond === v : S.chip === v}">${esc(label)}</button>`).join('');
 
   // Danh sách cấu hình, nhóm theo dòng chip
   const shown = targets.filter(t => S.chip === 'all' || t.chip === S.chip);
@@ -300,12 +309,12 @@ function render() {
     const rows = shown.filter(t => t.chip === g).map(t => {
       const s = per[t.code], tt = trend(t.code), ok = s && s.min <= t.cap;
       const cheapest = s && acts.filter(l => l.code === t.code).sort((a, b) => a.price - b.price)[0];
-      return `<button class="row" data-code="${esc(t.code)}">
+      return `<button type="button" class="row" data-code="${esc(t.code)}">
         <div style="min-width:0"><div class="t">${esc(t.ram)}GB · ${t.ssd >= 1024 ? t.ssd / 1024 + 'TB' : t.ssd + 'GB'} <span class="pill ${ok ? 'ok' : 'flat'}">${ok ? 'Dưới trần' : 'Trần ' + tr(t.cap)}</span></div>
         <div class="s">${s ? `${s.n} tin · rẻ nhất ở ${esc(cheapest.source)} · ${esc(t.need)}` : 'Chưa có tin trong ' + (d.settings?.windowDays || WINDOW_DAYS) + ' ngày'}</div></div>
-        <div class="r">${spark(t.code)}<div class="price">${s ? tr(s.min) : '–'}${chg(tt)}</div><span class="chev">›</span></div></button>`;
+        <div class="r">${spark(t.code)}<div class="price">${s ? tr(s.min) : '–'}${chg(tt)}</div><span class="chev" aria-hidden="true">›</span></div></button>`;
     }).join('');
-    return `<div class="ghead"><span>${esc(g)}</span><small>${esc((byCode[shown.find(t => t.chip === g).code].screens || []).join('", ') + '"')}</small></div><div class="group" style="--i:${gi + 4}">${rows}</div>`;
+    return `<div class="ghead"><span>${esc(g)}</span><small>${esc(screensLabel(byCode[shown.find(t => t.chip === g).code].screens))}</small></div><div class="group" style="--i:${gi + 4}">${rows}</div>`;
   }).join('') || '<div class="empty">Không có cấu hình nào khớp bộ lọc.</div>';
 
   // Deal
@@ -324,7 +333,7 @@ function renderSearch(acts = active()) {
   if (!toks.length) { $('#searchList').innerHTML = '<div class="empty">Gõ dòng máy, RAM, nguồn bán… để tìm trong mọi tin đang có.</div>'; return; }
   // Số đứng riêng ("16") phải khớp nguyên từ, để không dính "16GPU"
   const tests = toks.map(k => /^\d+$/.test(k) ? (h => new RegExp(`(^|[^\\w])${k}(?!\\w)`).test(h)) : (h => h.includes(k)));
-  const hit = acts.filter(l => { const h = [l.code, l.chip, l.source, l.cond, l.cpugpu, l.screen && l.screen + '"', l.screen && l.screen + ' inch', l.seller, l.battery && 'pin ' + l.battery].join(' ').toLowerCase(); return tests.every(t => t(h)); })
+  const hit = acts.filter(l => { const h = [l.code, l.chip, l.source, l.cond, l.cpugpu, l.screen && l.screen + '"', l.screen && l.screen + ' inch', l.seller, l.flag, l.battery && 'pin ' + l.battery].join(' ').toLowerCase(); return tests.every(t => t(h)); })
     .sort((a, b) => a.price - b.price);
   $('#searchList').innerHTML = hit.length ? `<div class="ghead"><span>${hit.length} tin</span><small>giá thấp → cao</small></div><div class="group">${hit.slice(0, 100).map(l => listingRow(l)).join('')}</div>` : '<div class="empty">Không thấy tin nào khớp.</div>';
 }
@@ -350,7 +359,8 @@ function chart(h, cap) {
 function openCfg(code) {
   const t = S.data.targets.find(x => x.code === code), list = active().filter(l => l.code === code).sort((a, b) => a.price - b.price), s = stats(list);
   const ok = s && s.min <= t.cap;
-  $('#dlgBody').innerHTML = `<div class="dlg-h"><div><div class="sub">${esc(t.chip)} · ${esc((t.screens || []).join('", '))}" · cần ${esc(t.need)}</div><h2 id="dlgTitle">${esc(t.code)}</h2></div><button class="close" data-close aria-label="Đóng">✕</button></div>
+  const scr = screensLabel(t.screens);
+  $('#dlgBody').innerHTML = `<div class="dlg-h"><div><div class="sub">${[t.chip, scr, 'cần ' + t.need].filter(Boolean).map(esc).join(' · ')}</div><h2 id="dlgTitle">${esc(t.code)}</h2></div><button type="button" class="close" data-close aria-label="Đóng">✕</button></div>
     <div class="big">${s ? vnd(s.min) : 'Chưa có tin'}</div>
     <span class="pill ${ok ? 'ok' : 'warn'}">${s ? ok ? `Thấp hơn trần ${tr(t.cap - s.min)}` : `Cao hơn trần ${tr(s.min - t.cap)}` : 'Trần ' + tr(t.cap)}</span>
     ${s ? `<div class="stats"><div><span>Số tin</span><b>${s.n}</b></div><div><span>Trung vị</span><b>${tr(s.med)}</b></div><div><span>Trung bình</span><b>${tr(s.avg)}</b></div><div><span>Cao nhất</span><b>${tr(s.max)}</b></div></div>` : ''}
@@ -360,11 +370,11 @@ function openCfg(code) {
 }
 function openSettings() {
   const theme = document.documentElement.dataset.theme || 'auto';
-  $('#dlgBody').innerHTML = `<div class="dlg-h"><h2 id="dlgTitle">Cài đặt</h2><button class="close" data-close aria-label="Đóng">✕</button></div>
-    <div class="sec"><div class="set"><span>Giao diện</span><div class="seg" id="themeSeg">${[['auto', 'Tự động'], ['light', 'Sáng'], ['dark', 'Tối']].map(([v, l]) => `<button data-theme="${v}" aria-pressed="${theme === v}">${l}</button>`).join('')}</div></div>
+  $('#dlgBody').innerHTML = `<div class="dlg-h"><h2 id="dlgTitle">Cài đặt</h2><button type="button" class="close" data-close aria-label="Đóng">✕</button></div>
+    <div class="sec"><div class="set"><span>Giao diện</span><div class="seg" id="themeSeg">${[['auto', 'Tự động'], ['light', 'Sáng'], ['dark', 'Tối']].map(([v, l]) => `<button type="button" data-theme="${v}" aria-pressed="${theme === v}">${l}</button>`).join('')}</div></div>
     <label class="set"><span>Độ mờ của kính<div class="sub">Trái: trong suốt · Phải: mờ đục</div></span><input type="range" id="tint" min="0" max="1" step="0.05" value="${getComputedStyle(document.documentElement).getPropertyValue('--tint').trim() || .35}"></label></div>
-    <div class="sec"><a class="row" href="${SHEET}" target="_blank" rel="noopener"><div class="t">Mở Google Sheet dữ liệu</div><span class="chev">›</span></a>
-    <a class="row" href="https://github.com/HienPhuong99/MacbookPrice/blob/main/HUONG-DAN-PHIM-TAT.md" target="_blank" rel="noopener"><div class="t">Cài Phím tắt cho iPhone</div><span class="chev">›</span></a></div>
+    <div class="sec"><a class="row" href="${SHEET}" target="_blank" rel="noopener"><div class="t">Mở Google Sheet dữ liệu</div><span class="chev" aria-hidden="true">›</span></a>
+    <a class="row" href="https://github.com/HienPhuong99/MacbookPrice/blob/main/HUONG-DAN-PHIM-TAT.md" target="_blank" rel="noopener"><div class="t">Cài Phím tắt cho iPhone</div><span class="chev" aria-hidden="true">›</span></a></div>
     <p class="sub" style="margin:14px 4px 0">Giá lấy từ sheet "Dò giá MacBook 2027", quét tự động 9:30 sáng mỗi ngày. Thêm vào Màn hình chính: Safari → Chia sẻ → Thêm vào MH chính.</p>`;
   show();
 }
@@ -376,9 +386,17 @@ function hide() { if (!dlg.open || dlg.classList.contains('closing')) return; dl
 dlg.addEventListener('click', e => { if (e.target === dlg || e.target.closest('[data-close]')) hide(); });
 dlg.addEventListener('cancel', e => { e.preventDefault(); hide(); });
 let drag = null;
+function endDrag(cancel) {
+  if (!drag) return;
+  const far = !cancel && drag.dy > 110;
+  drag = null;
+  if (far) hide();
+  else { dlg.style.transition = 'transform .3s var(--ios)'; dlg.style.transform = ''; setTimeout(() => dlg.style.transition = '', 300); }
+}
 dlg.addEventListener('pointerdown', e => { if (dlg.scrollTop <= 0 && e.target.closest('.dlg-h,.dlg') && !e.target.closest('a,button,input')) drag = { y: e.clientY, dy: 0 }; });
-addEventListener('pointermove', e => { if (!drag) return; drag.dy = Math.max(0, e.clientY - drag.y); dlg.style.transform = `translate3d(0,${drag.dy}px,0)`; });
-addEventListener('pointerup', () => { if (!drag) return; const far = drag.dy > 110; drag = null; if (far) hide(); else { dlg.style.transition = 'transform .3s var(--ios)'; dlg.style.transform = ''; setTimeout(() => dlg.style.transition = '', 300); } });
+addEventListener('pointermove', e => { if (!drag) return; drag.dy = Math.max(0, e.clientY - drag.y); if (drag.dy > 4) dlg.style.transform = `translate3d(0,${drag.dy}px,0)`; });
+addEventListener('pointerup', () => endDrag(false));
+addEventListener('pointercancel', () => endDrag(true));
 dlg.addEventListener('input', e => { if (e.target.id === 'tint') { document.documentElement.style.setProperty('--tint', e.target.value); try { localStorage.setItem('tint', e.target.value); } catch {} } });
 dlg.addEventListener('click', e => {
   const b = e.target.closest('[data-theme]'); if (!b) return;
@@ -392,7 +410,7 @@ dlg.addEventListener('click', e => {
 const lens = $('#lens');
 function moveLens(jelly) {
   const b = $(`.tab[data-tab="${S.tab}"]`);
-  lens.style.width = b.offsetWidth + 'px'; lens.style.transform = `translateX(${b.offsetLeft - 4}px)`;
+  lens.style.width = b.offsetWidth + 'px'; lens.style.transform = `translateX(${b.offsetLeft}px)`;
   if (jelly) { lens.classList.remove('jelly'); void lens.offsetWidth; lens.classList.add('jelly'); }
 }
 function setTab(tab, jelly) {
@@ -439,8 +457,10 @@ async function load(manual) {
     $('#status').textContent = 'Lỗi tải';
   } finally { btn.classList.remove('spin'); btn.disabled = false; }
 }
+function syncHash() { const h = location.hash.slice(1); if (['cfg', 'deal', 'search'].includes(h)) setTab(h); }
 setTab(['cfg', 'deal', 'search'].includes(S.tab) ? S.tab : 'cfg');
-if (location.hash === '#deal' || location.hash === '#search') setTab(location.hash.slice(1));
+syncHash();
+addEventListener('hashchange', syncHash);
 load();
 </script>
 </body>
