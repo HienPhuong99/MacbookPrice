@@ -152,9 +152,30 @@ class ScanMacbookTest(unittest.TestCase):
             with open(os.path.join(tmp, 'summary.txt'), encoding='utf-8') as f:
                 lines = f.read().splitlines()
             self.assertEqual(lines[0], 'Giá MacBook · 09:30 23/11')
-            self.assertEqual(lines[1], '✅ M1 Pro 32/512: 24,5tr (QMac Store) ▼1tr')
-            self.assertEqual(lines[2], 'Deal dưới trần: 2 tin')
+            self.assertEqual(lines[1], '🆕 1 deal mới: M1 Pro 32/512: 24,5tr (QMac Store)')  # vừa giảm giá
+            self.assertEqual(lines[2], '✅ M1 Pro 32/512: 24,5tr (QMac Store) ▼1tr')
+            self.assertEqual(lines[3], 'Deal dưới trần: 2 tin')
             self.assertLessEqual(len(lines), 12)
+
+            # Phím tắt "Chọn cấu hình": cấu hình -> {nhãn tin: URL}
+            with open(os.path.join(tmp, 'menu.json'), encoding='utf-8') as f:
+                menu = json.load(f)
+            items = menu['M1 Pro 32/512 · 24,5tr']
+            self.assertTrue(next(iter(items)).startswith('24,5tr · QMac Store'))
+            self.assertTrue(all(u.startswith('http') for u in items.values()))
+
+    def test_notify_only_clean_new_deals_from_known_sources(self):
+        d = scan.build_dataset(SAMPLE_LOG_CSV, SAMPLE_TARGETS_CSV, SAMPLE_SETTINGS_CSV, '2026-11-22T09:30:00+07:00')
+        known = [dict(l) for l in d['listings']]
+        self.assertEqual(scan.find_new_deals(known, d), [])                     # không đổi -> không báo
+        cheap = dict(known[0], id='SHOP-X-1', price=20_000_000, flag='')
+        mdm = dict(cheap, id='SHOP-X-2', flag='mdm')
+        stranger = dict(cheap, id='CT-1', source='Nguồn lạ')                     # nguồn mới thêm lần đầu -> không báo ồ ạt
+        d['listings'] += [cheap, mdm, stranger]
+        new = scan.find_new_deals(known, d)
+        self.assertEqual([l['id'] for l in new], ['SHOP-X-1'])
+        self.assertIn('🆕 1 deal mới', scan.build_notify(new, d))
+        self.assertEqual(scan.build_notify([], d), '')
 
     def test_shop_listings_are_merged(self):
         shop = {'id': 'SHOP-MacShop24h-1', 'first': '2026-11-22', 'last': '2026-11-22', 'srcType': 'Shop tự quét', 'source': 'MacShop24h',

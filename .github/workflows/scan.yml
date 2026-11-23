@@ -1,7 +1,8 @@
 name: Quét giá MacBook hằng ngày
 on:
   schedule:
-    - cron: '30 2 * * *'   # 9:30 sáng giờ Việt Nam (GitHub có thể trễ vài phút)
+    - cron: '30 2 * * *'    # 9:30 sáng giờ Việt Nam (GitHub có thể trễ vài phút)
+    - cron: '30 14 * * *'   # 21:30 tối
   workflow_dispatch:
 permissions:
   contents: write
@@ -10,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: python3 .github/scan_shops.py   # tự quét shop có JSON; lỗi thì vẫn dùng dữ liệu sheet
+      - run: python3 .github/scan_shops.py   # tự quét shop + Chợ Tốt; lỗi thì vẫn dùng dữ liệu sheet
         continue-on-error: true
       - run: python3 .github/scan.py
       - run: |
@@ -18,3 +19,11 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data
           git diff --cached --quiet || (git commit -m "Quét giá $(TZ=Asia/Ho_Chi_Minh date '+%d/%m/%Y %H:%M')" && git push)
+      - name: Báo deal mới về iPhone (ntfy) — bỏ qua nếu chưa đặt secret NTFY_TOPIC
+        env:
+          NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
+        run: |
+          if [ -n "$NTFY_TOPIC" ] && [ -s notify.txt ]; then
+            curl -sS -H "Tags: computer" -H "Click: https://hienphuong99.github.io/MacbookPrice/#deal" \
+              --data-binary @notify.txt "https://ntfy.sh/$NTFY_TOPIC" > /dev/null
+          fi

@@ -37,15 +37,34 @@ class ShopScanTest(unittest.TestCase):
 
     def test_scan_dedups_keeps_first_and_survives_shop_error(self):
         raw = [{'id': '1', 'title': 'Macbook Pro 14 M1 Pro 32GB 512GB Likenew', 'extra': '', 'price': 24_000_000, 'list': None, 'url': 'https://x/1'}]
-        def boom(shop):
+        def boom(shop, targets):
             raise OSError('down')
         prev = {'listings': [{'id': 'SHOP-MacShop24h-1', 'first': '2026-11-01'}]}
-        d = ss.scan_shops(TARGETS, '2026-11-22', prev, fetchers={'sapo': lambda s: raw, 'woo': boom})
+        d = ss.scan_shops(TARGETS, '2026-11-22', prev, fetchers={'sapo': lambda s, t: raw, 'woo': boom, 'chotot': lambda s, t: []})
         mine = [l for l in d['listings'] if l['source'] == 'MacShop24h']
         self.assertEqual(len(mine), 1)
         self.assertEqual(mine[0]['first'], '2026-11-01')
         self.assertEqual(mine[0]['last'], '2026-11-22')
         self.assertTrue(d['report']['MacVN'].startswith('LỖI'))
+
+    def test_failed_shop_keeps_previous_and_chotot_rules(self):
+        old = {'id': 'SHOP-MacVN-9', 'source': 'MacVN', 'last': '2026-11-20', 'price': 25_000_000}
+        ct = [{'id': '1', 'title': 'Macbook Pro 14 M1 Pro 32GB 512GB bypass mdm LH 0912 345 678', 'extra': '', 'price': 19_000_000,
+               'list': None, 'url': 'https://www.chotot.com/1.htm', 'used': True},
+              {'id': '2', 'title': 'Macbook Pro 14 M1 Pro 32GB 512GB đặt cọc', 'extra': '', 'price': 2_000_000,
+               'list': None, 'url': 'https://www.chotot.com/2.htm', 'used': True}]
+        def boom(shop, targets):
+            raise OSError('down')
+        d = ss.scan_shops(TARGETS, '2026-11-23', {'listings': [old]},
+                          fetchers={'sapo': lambda s, t: [], 'woo': boom, 'chotot': lambda s, t: ct})
+        self.assertIn(old, d['listings'])                                   # MacVN lỗi -> giữ tin cũ, `last` cũ
+        st = {s['shop']: s for s in d['status']}
+        self.assertFalse(st['MacVN']['ok'])
+        self.assertTrue(st['Chợ Tốt']['ok'])
+        got = [l for l in d['listings'] if l['source'] == 'Chợ Tốt']
+        self.assertEqual(len(got), 1)                                       # tin 2tr (đặt cọc) bị loại
+        self.assertEqual((got[0]['flag'], got[0]['cond'], got[0]['seller']), ('mdm', 'Cũ', ''))
+        self.assertNotIn('345', got[0]['note'])                             # che SĐT
 
 
 if __name__ == '__main__':

@@ -291,11 +291,68 @@ def tr(v):
     return f'{round(v / 1e6, 2):g}'.replace('.', ',') + 'tr'
 
 
-def build_summary(payload, max_lines=12):
-    """Chữ thuần cho Phím tắt iPhone: giá thấp nhất từng cấu hình (ưu tiên dưới trần) + số deal."""
+def active_listings(payload):
     t = datetime.datetime.fromisoformat(payload['time'])
     since = (t.date() - datetime.timedelta(days=payload['settings']['windowDays'])).isoformat()
-    active = [l for l in payload['listings'] if l.get('price') and (l.get('last') or '') >= since]
+    return [l for l in payload['listings'] if l.get('price') and (l.get('last') or '') >= since]
+
+
+def short_name(tg):
+    ssd = f"{tg['ssd'] // 1024}TB" if tg['ssd'] >= 1024 else str(tg['ssd'])
+    return f"{tg['chip']} {tg['ram']}/{ssd}"
+
+
+def find_new_deals(prev_listings, payload):
+    """Tin sạch (không cờ) ≤ giá trần mà lần quét trước chưa có, hoặc vừa giảm giá.
+    Bỏ qua nguồn lần trước chưa có (lần đầu thêm nguồn sẽ không báo ồ ạt)."""
+    prev = {l['id']: l.get('price') for l in prev_listings}
+    prev_sources = {l.get('source') for l in prev_listings}
+    caps = {tg['code']: tg.get('cap') or 0 for tg in payload['targets']}
+    out = [l for l in active_listings(payload)
+           if not l.get('flag') and l['source'] in prev_sources and caps.get(l['code']) and l['price'] <= caps[l['code']]
+           and (l['id'] not in prev or (prev[l['id']] or 0) > l['price'])]
+    return sorted(out, key=lambda l: l['price'] / caps[l['code']])
+
+
+def deal_text(l, targets):
+    tg = next(t for t in targets if t['code'] == l['code'])
+    return f"{short_name(tg)}: {tr(l['price'])} ({l['source']})"
+
+
+def build_notify(new, payload):
+    """Nội dung đẩy ntfy (rỗng = không báo)."""
+    if not new:
+        return ''
+    lines = [f"🆕 {len(new)} deal mới dưới giá trần"] + [f"• {deal_text(l, payload['targets'])}" for l in new[:5]]
+    return '\n'.join(lines) + '\n'
+
+
+def build_menu(payload, per_cfg=5):
+    """Phím tắt "Chọn cấu hình": {cấu hình · giá rẻ nhất: {nhãn tin: URL}} -> Chọn từ danh sách 2 lần rồi Mở URL."""
+    active = active_listings(payload)
+    menu = {}
+    for tg in sorted(payload['targets'], key=lambda t: t.get('order') or 0):
+        mine = sorted((l for l in active if l['code'] == tg['code'] and l.get('url')),
+                      key=lambda l: (bool(l.get('flag')), l['price']))  # tin sạch lên trước
+        if not mine:
+            continue
+        items = {}
+        for l in mine[:per_cfg]:
+            label = f"{tr(l['price'])} · {l['source']}"
+            label += f" · {l['cond']}" if l.get('cond') else ''
+            label += f' {l["screen"]}"' if l.get('screen') else ''
+            label += f" [{l['flag'].upper()}]" if l.get('flag') else ''
+            while label in items:
+                label += ' ·'
+            items[label] = l['url']
+        menu[f"{short_name(tg)} · {tr(min(l['price'] for l in mine))}"] = items
+    return menu
+
+
+def build_summary(payload, max_lines=12, new=None):
+    """Chữ thuần cho Phím tắt iPhone: giá thấp nhất từng cấu hình (ưu tiên dưới trần) + số deal."""
+    t = datetime.datetime.fromisoformat(payload['time'])
+    active = active_listings(payload)
     rows, deals = [], 0
     for tg in payload['targets']:
         mine = sorted((l for l in active if l['code'] == tg['code']), key=lambda l: l['price'])
@@ -307,19 +364,24 @@ def build_summary(payload, max_lines=12):
         h = payload['history'].get(tg['code']) or []
         d = h[-1][1] - h[-2][1] if len(h) >= 2 else 0
         arrow = f" {'▼' if d < 0 else '▲'}{tr(abs(d))}" if d else ''
-        name = f"{tg['chip']} {tg['ram']}/{tg['ssd'] // 1024 if tg['ssd'] >= 1024 else tg['ssd']}{'TB' if tg['ssd'] >= 1024 else ''}"
+        name = short_name(tg)
         under = bool(cap) and best['price'] <= cap
         rows.append((not under, best['price'] / cap if cap else 9, f"{'✅' if under else '•'} {name}: {tr(best['price'])} ({best['source']}){arrow}"))
     rows.sort()
-    lines = [f'Giá MacBook · {t:%H:%M %d/%m}'] + [r[2] for r in rows[:max_lines - 3]]
+    head = [f'Giá MacBook · {t:%H:%M %d/%m}']
+    if new:
+        head.append(f"🆕 {len(new)} deal mới: {deal_text(new[0], payload['targets'])}")
+    lines = head + [r[2] for r in rows[:max_lines - len(head) - 2]]
     lines += [f'Deal dưới trần: {deals} tin', 'hienphuong99.github.io/MacbookPrice/#deal']
     return '\n'.join(lines) + '\n'
 
 
-def build_dataset(log_csv, targets_csv, settings_csv, now_iso, prev_history=None, extra_listings=None):
+def build_dataset(log_csv, targets_csv, settings_csv, now_iso, prev_history=None, extra_listings=None, shop_status=None):
     settings = parse_settings(settings_csv)
     targets = parse_targets(targets_csv)
-    listings = parse_listings(log_csv) + list(extra_listings or [])
+    extra = [l for l in extra_listings or [] if not l.get('price') or l['price'] <= settings['maxLogPrice']]
+    scanned_urls = {l['url'] for l in extra if l.get('url')}  # tin vừa có trong sheet vừa tự quét -> giữ bản quét
+    listings = [l for l in parse_listings(log_csv) if l.get('url') not in scanned_urls] + extra
     if not settings['includeFacebook']:
         listings = [l for l in listings if not is_facebook(l)]
     scan_date_iso = now_iso[:10]
@@ -330,13 +392,16 @@ def build_dataset(log_csv, targets_csv, settings_csv, now_iso, prev_history=None
         window_days=settings['windowDays'],
         include_facebook=settings['includeFacebook'],
     )
-    return {
+    payload = {
         'time': now_iso,
         'settings': settings,
         'targets': targets,
         'listings': listings,
         'history': history,
     }
+    if shop_status:
+        payload['shopStatus'] = shop_status
+    return payload
 
 
 def fetch_sheet_csv(sheet_id, tab_name, timeout=30):
@@ -352,33 +417,39 @@ def fetch_sheet_csv(sheet_id, tab_name, timeout=30):
     return text
 
 
-def scan_to_file(log_csv, targets_csv, settings_csv, now_iso, out_path=OUT_PATH, extra_listings=None):
-    prev_history = {}
+def scan_to_file(log_csv, targets_csv, settings_csv, now_iso, out_path=OUT_PATH, extra_listings=None, shop_status=None,
+                 notify_path=None):
+    prev = {}
     if os.path.exists(out_path):
         try:
             with open(out_path, encoding='utf-8') as f:
-                prev_history = json.load(f).get('history') or {}
+                prev = json.load(f)
         except (OSError, ValueError):
-            prev_history = {}
+            prev = {}
 
-    payload = build_dataset(log_csv, targets_csv, settings_csv, now_iso, prev_history=prev_history, extra_listings=extra_listings)
-    parent = os.path.dirname(out_path)
-    if parent:
-        os.makedirs(parent, exist_ok=True)
-    with open(out_path, 'w', encoding='utf-8', newline='\n') as f:
-        json.dump(payload, f, ensure_ascii=False, separators=(',', ':'))
-    with open(os.path.join(parent or '.', 'summary.txt'), 'w', encoding='utf-8', newline='\n') as f:
-        f.write(build_summary(payload))
+    payload = build_dataset(log_csv, targets_csv, settings_csv, now_iso, prev_history=prev.get('history') or {},
+                            extra_listings=extra_listings, shop_status=shop_status)
+    new = find_new_deals(prev.get('listings') or [], payload)
+    parent = os.path.dirname(out_path) or '.'
+    os.makedirs(parent, exist_ok=True)
+    files = {out_path: json.dumps(payload, ensure_ascii=False, separators=(',', ':')),
+             os.path.join(parent, 'summary.txt'): build_summary(payload, new=new),
+             os.path.join(parent, 'menu.json'): json.dumps(build_menu(payload), ensure_ascii=False, indent=1)}
+    if notify_path:
+        files[notify_path] = build_notify(new, payload)  # ngoài data/ -> không commit, chỉ cho bước ntfy đọc
+    for path, text in files.items():
+        with open(path, 'w', encoding='utf-8', newline='\n') as f:
+            f.write(text)
     return out_path, payload
 
 
-def load_shop_listings(path=os.path.join('data', 'shops.json')):
-    """Tin do scan_shops.py tự quét (nếu có)."""
+def load_shops(path=os.path.join('data', 'shops.json')):
+    """Kết quả scan_shops.py (nếu có): {'listings': [...], 'status': [...]}."""
     try:
         with open(path, encoding='utf-8') as f:
-            return json.load(f).get('listings') or []
+            return json.load(f)
     except (OSError, ValueError):
-        return []
+        return {}
 
 
 def main():
@@ -386,9 +457,11 @@ def main():
     log_csv = fetch_sheet_csv(SHEET_ID, TAB_LOG)
     targets_csv = fetch_sheet_csv(SHEET_ID, TAB_TARGETS)
     settings_csv = fetch_sheet_csv(SHEET_ID, TAB_SETTINGS)
-    shops = load_shop_listings()
-    out_path, payload = scan_to_file(log_csv, targets_csv, settings_csv, now_iso, out_path=OUT_PATH, extra_listings=shops)
-    print(f'+ {len(shops)} shop listings')
+    shops = load_shops()
+    out_path, payload = scan_to_file(log_csv, targets_csv, settings_csv, now_iso, out_path=OUT_PATH,
+                                     extra_listings=shops.get('listings'), shop_status=shops.get('status'),
+                                     notify_path='notify.txt')
+    print(f"+ {len(shops.get('listings') or [])} shop listings")
     print(
         f'{out_path}: {len(payload["targets"])} targets, '
         f'{len(payload["listings"])} listings, '

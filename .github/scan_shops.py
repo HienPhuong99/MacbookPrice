@@ -8,6 +8,7 @@ import json
 import os
 import re
 import sys
+import urllib.parse
 import urllib.request
 
 sys.path.insert(0, os.path.dirname(__file__))
@@ -15,18 +16,23 @@ import scan  # noqa: E402  (dùng chung parse_targets / fetch_sheet_csv)
 
 OUT_PATH = os.path.join('data', 'shops.json')
 UA = {'User-Agent': 'Mozilla/5.0 (MacbookPriceBot)'}
-# ponytail: chỉ shop có JSON sẵn; sản phẩm Woo dạng "biến thể" (tên không ghi RAM/SSD, vd. 2T Mobile) bị bỏ qua — thêm gọi /products/<variation id> nếu cần.
+# ponytail: chỉ shop có JSON sẵn. Woo "biến thể" của 2T Mobile bị bỏ qua: thuộc tính chỉ ghi "Cấu hình 1..N"
+# (không có RAM/SSD, kiểm 23/11) và toàn máy M5/M6 ngoài danh sách mục tiêu — cần thì đọc mô tả từng biến thể.
+PHONE_RE = re.compile(r'(?:\+?84|0)[\d .]{8,12}\d')  # tiêu đề tin chợ đôi khi ghi SĐT -> che
+MIN_PRICE = 10_000_000  # dưới mức này là phụ kiện / đặt cọc / máy đời cũ
+FLAG_RE = re.compile(r'\bmdm\b|bypass|icloud|lỗi màn|đốm|sọc màn|ố màn|bể màn|vỡ màn|hư main', re.IGNORECASE)
 SHOPS = [
     {'name': 'MacShop24h', 'kind': 'sapo', 'base': 'https://macshop24h.vn'},
     {'name': 'Lâm Phong Store', 'kind': 'sapo', 'base': 'https://lamphongstore.com'},
     {'name': 'MacVN', 'kind': 'woo', 'base': 'https://macvn.com.vn'},
     {'name': '2T Mobile', 'kind': 'woo', 'base': 'https://2tmobile.com'},
+    {'name': 'Chợ Tốt', 'kind': 'chotot', 'base': 'https://gateway.chotot.com/v1/public/ad-listing'},
 ]
 
 CHIP_RE = re.compile(r'\bM([1-9])(?:\s*(Pro|Max|Ultra))?\b', re.IGNORECASE)
 RAM_RE = re.compile(r'\b(8|16|18|24|32|36|48|64|96|128)\s*GB(?!\s*SSD)', re.IGNORECASE)
 SSD_RE = re.compile(r'\b(256|512)\s*GB\b|\b([1248])\s*TB\b', re.IGNORECASE)
-SCREEN_RE = re.compile(r'\b(13|14|15|16)(?:[.,]\d)?\s*(?:inch|in\b|"|”|’’|-inch)', re.IGNORECASE)
+SCREEN_RE = re.compile(r"""\b(13|14|15|16)(?:[.,]\d)?\s*(?:inch|in\b|"|”|''|'|’’|’|-inch)""", re.IGNORECASE)
 CPUGPU_RE = re.compile(r'(\d+)\s*CPU\s*/\s*(\d+)\s*GPU', re.IGNORECASE)
 NEW_RE = re.compile(r'new\s*seal|newseal|mới\s*100|chính hãng|\bnew\b|\bmới\b', re.IGNORECASE)
 USED_RE = re.compile(r'like\s*new|\bcũ\b|đã qua sử dụng|99\s*%|98\s*%|trôi bảo hành|open\s*box|\bused\b', re.IGNORECASE)
@@ -82,7 +88,19 @@ def fetch_json(url, timeout=25):
     return json.loads(text[i:])
 
 
-def sapo_products(shop):
+NEG_RE = re.compile(r'không|\bko\b|\bk\b|chưa|sạch|\bno\b|free|thoát|zin', re.IGNORECASE)
+
+
+def flag_of(text):
+    """Cờ đầu tiên không bị phủ định ("không MDM", "icloud sạch", "full sạch" -> bỏ qua)."""
+    m = next((m for m in FLAG_RE.finditer(text) if not NEG_RE.search(text[max(0, m.start() - 25):m.end() + 8])), None)
+    if not m:
+        return ''
+    w = m[0].lower()
+    return 'mdm' if w in ('mdm', 'bypass') else 'icloud' if w == 'icloud' else 'lỗi'
+
+
+def sapo_products(shop, targets=None):
     out = []
     for page in range(1, 9):
         items = fetch_json(f"{shop['base']}/products.json?limit=250&page={page}").get('products') or []
@@ -99,7 +117,7 @@ def sapo_products(shop):
     return out
 
 
-def woo_products(shop):
+def woo_products(shop, targets=None):
     out = []
     for page in range(1, 9):
         items = fetch_json(f"{shop['base']}/wp-json/wc/store/v1/products?search=macbook&per_page=100&page={page}")
@@ -117,32 +135,59 @@ def woo_products(shop):
     return out
 
 
+def chotot_products(shop, targets):
+    """Chợ Tốt (API công khai, mục Laptop cg=5030): 1 truy vấn / (chip, RAM) mục tiêu, tối đa 100 tin mới nhất."""
+    out, seen = [], set()
+    for q in sorted({f"macbook {t['chip']} {t['ram']}gb".lower() for t in targets}):
+        for o in (0, 50):
+            ads = fetch_json(f"{shop['base']}?cg=5030&limit=50&o={o}&q={urllib.parse.quote(q)}").get('ads') or []
+            for a in ads:
+                if a.get('type') != 's' or a['list_id'] in seen or not a.get('price'):
+                    continue
+                seen.add(a['list_id'])
+                out.append({'id': str(a['list_id']), 'title': a.get('subject', ''), 'extra': (a.get('body') or '')[:300],
+                            'price': int(a['price']), 'list': None, 'url': f"https://www.chotot.com/{a['list_id']}.htm",
+                            'used': True})  # chợ đồ cũ: mặc định là máy cũ
+            if len(ads) < 50:
+                break
+    return out
+
+
 def scan_shops(targets, today_iso, prev=None, fetchers=None):
-    prev_first = {l['id']: l.get('first') for l in (prev or {}).get('listings', [])}
-    fetchers = fetchers or {'sapo': sapo_products, 'woo': woo_products}
-    listings, report = [], {}
+    prev_listings = (prev or {}).get('listings', [])
+    prev_first = {l['id']: l.get('first') for l in prev_listings}
+    fetchers = fetchers or {'sapo': sapo_products, 'woo': woo_products, 'chotot': chotot_products}
+    listings, report, status = [], {}, []
     for shop in SHOPS:
         try:
-            raw = fetchers[shop['kind']](shop)
-        except Exception as e:  # 1 shop lỗi không làm hỏng cả lần quét
+            raw = fetchers[shop['kind']](shop, targets)
+        except Exception as e:  # 1 shop lỗi: giữ tin lần trước (giữ nguyên `last`) để giá không nhảy giả
+            kept = [l for l in prev_listings if l.get('source') == shop['name']]
+            listings += kept
             report[shop['name']] = f'LỖI {type(e).__name__}: {e}'[:160]
+            status.append({'shop': shop['name'], 'ok': False, 'n': len(kept), 'note': f"{report[shop['name']][:80]} — giữ {len(kept)} tin lần trước"})
             continue
         n = 0
         for r in raw:
+            if r['price'] < MIN_PRICE:
+                continue
             p = parse_title(r['title'], r['extra'])
+            if p and r.get('used') and p['cond'] != 'Mới':
+                p['cond'] = 'Cũ'
             t = p and match_target(p, targets)
             if not t:
                 continue
             lid = f"SHOP-{shop['name']}-{r['id']}"
             listings.append({'id': lid, 'first': prev_first.get(lid) or today_iso, 'last': today_iso, 'latest': True,
-                             'srcType': 'Shop tự quét', 'source': shop['name'], 'code': t['code'], 'chip': t['chip'],
+                             'srcType': 'Chợ tự quét' if r.get('used') else 'Shop tự quét', 'source': shop['name'], 'code': t['code'], 'chip': t['chip'],
                              'cpugpu': p['cpugpu'], 'ram': p['ram'], 'ssd': p['ssd'], 'screen': p['screen'],
                              'cond': p['cond'] or t.get('need') or '', 'battery': None, 'cycle': None, 'warranty': None,
-                             'list': r['list'], 'price': r['price'], 'promo': '', 'seller': shop['name'],
-                             'url': r['url'], 'flag': '', 'note': r['title'][:120]})
+                             'list': r['list'], 'price': r['price'], 'promo': '', 'seller': '' if r.get('used') else shop['name'],
+                             'url': r['url'], 'flag': flag_of(f"{r['title']} {r['extra']}"), 'note': PHONE_RE.sub('…', r['title'])[:120]})
             n += 1
         report[shop['name']] = f'{len(raw)} sản phẩm, {n} khớp cấu hình'
-    return {'time': today_iso, 'report': report, 'listings': listings}
+        status.append({'shop': shop['name'], 'ok': True, 'n': n, 'note': report[shop['name']]})
+    return {'time': today_iso, 'report': report, 'status': status, 'listings': listings}
 
 
 def main():
