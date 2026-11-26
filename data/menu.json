@@ -3,8 +3,8 @@
   "22,8tr · Chợ Tốt · Cũ 14\"": "https://www.chotot.com/135047781.htm",
   "24tr · Chợ Tốt · Cũ 14\"": "https://www.chotot.com/135749860.htm",
   "26,5tr · Chợ Tốt · Cũ 16\"": "https://www.chotot.com/135899686.htm",
-  "26,99tr · Chợ Tốt · Cũ 16\"": "https://www.chotot.com/135815212.htm",
-  "26,99tr · Chợ Tốt · Cũ 16\" ·": "https://www.chotot.com/135810120.htm"
+  "26,5tr · Chợ Tốt · Cũ": "https://www.chotot.com/135431725.htm",
+  "26,99tr · Chợ Tốt · Cũ 16\"": "https://www.chotot.com/135815212.htm"
  },
  "M1 Pro 32/1TB · 24,8tr": {
   "24,8tr · Chợ Tốt · Cũ 14\"": "https://www.chotot.com/134963177.htm",
@@ -24,15 +24,13 @@
   "32tr · Chợ Tốt · Cũ 16\"": "https://www.chotot.com/135643363.htm",
   "32tr · Chợ Tốt · Cũ 16\" ·": "https://www.chotot.com/136055515.htm",
   "32,49tr · Chợ Tốt · Cũ 16\"": "https://www.chotot.com/135309935.htm",
-  "33,99tr · Chợ Tốt · Cũ 16\"": "https://www.chotot.com/135610184.htm",
-  "33,99tr · Chợ Tốt · Cũ 16\" ·": "https://www.chotot.com/133917403.htm"
+  "33,99tr · Chợ Tốt · Cũ 16\"": "https://www.chotot.com/133917403.htm",
+  "34tr · Chợ Tốt · Cũ 16\"": "https://www.chotot.com/135211910.htm"
  },
- "M1 Max 64/512 · 35,5tr": {
-  "35,5tr · Chợ Tốt · Cũ 14\"": "https://www.chotot.com/135591824.htm",
+ "M1 Max 64/512 · 37tr": {
   "37tr · MacVN · Cũ 14\"": "https://macvn.com.vn/san-pham/macbook-pro-14-inch-m1-2021-used/?attribute_cau-hinh=Chip+M1+Max+24GPU+%2F+64Gb+%2F+512Gb",
   "42,4tr · MacOne · Cũ 14\"": "https://macone.vn/macbook-pro-2021-14-inch-apple-m1-max-10-core-cpu-32-core-gpu-64gb-ram-512gb-ssd-like-new/",
-  "43,8tr · MacOne · Cũ 16\"": "https://macone.vn/macbook-pro-2021-16-inch-apple-m1-max-10-core-cpu-24-core-gpu-64gb-ram-512gb-ssd-like-new/",
-  "35,8tr · Chợ Tốt · Cũ 14\" [MDM]": "https://www.chotot.com/135587980.htm"
+  "43,8tr · MacOne · Cũ 16\"": "https://macone.vn/macbook-pro-2021-16-inch-apple-m1-max-10-core-cpu-24-core-gpu-64gb-ram-512gb-ssd-like-new/"
  },
  "M1 Max 64/1TB · 39tr": {
   "39tr · MacVN · Cũ 16\"": "https://macvn.com.vn/san-pham/macbook-pro-m1-16-inch-2021-used/?attribute_cau-hinh=M1+Max+24GPU+%2F+64Gb+%2F+1Tb",
@@ -52,15 +50,15 @@
   "35tr · MacVN · Cũ 14\"": "https://macvn.com.vn/san-pham/macbook-pro-m2-14-inch-2023-used/?attribute_cau-hinh=M2+PRO+%2F+32GB+%2F+SSD+1TB",
   "38,5tr · Mac24h · Cũ 16\"": "https://mac24h.vn/macbook-pro-m2-16-inch-2023-used.html?variation_id=67766",
   "39tr · MacVN · Cũ 16\"": "https://macvn.com.vn/san-pham/macbook-pro-m2-16-inch-2023-used/?attribute_cau-hinh=M2+Pro+%2F+32Gb+%2F+1Tb",
-  "39,2tr · Chợ Tốt · Cũ 14\"": "https://www.chotot.com/135501748.htm",
-  "39,3tr · Chợ Tốt · Cũ 14\"": "https://www.chotot.com/135257093.htm"
+  "39,5tr · Chợ Tốt · Cũ 14\"": "https://www.chotot.com/135455579.htm",
+  "39,5tr · Chợ Tốt · Cũ 14\" ·": "https://www.chotot.com/135663728.htm"
  },
  "Air M4 16/512 · 29,5tr": {
   "29,5tr · Mac24h · Mới 13\"": "https://mac24h.vn/macbook-air-m4-13-inch-2025.html?variation_id=65245",
   "29,5tr · MacVN · Mới 13\"": "https://macvn.com.vn/san-pham/macbook-air-13-inch-m4-2025/?attribute_cau-hinh=M4+%2F+16GB+%2F+512GB",
   "29,99tr · Thế Giới Di Động · Mới 13\"": "https://www.thegioididong.com/laptop/macbook-air-13-inch-m4-16gb-512gb",
-  "30,2tr · MacOne · Cũ 13\"": "https://macone.vn/macbook-air-2025-13-inch-apple-m4-16gb-ram-512gb-ssd-openbox/",
-  "30,49tr · Phong Vũ · Mới 13\"": "https://phongvu.vn/may-tinh-xach-tay-apple-macbook-air-13-6-m4-10-core-cpu-10-core-gpu-16gb-512gb-ssd-mw0x3sa-a-silver--s250308342"
+  "30,49tr · Phong Vũ · Mới 13\"": "https://phongvu.vn/may-tinh-xach-tay-apple-macbook-air-13-6-m4-10-core-cpu-10-core-gpu-16gb-512gb-ssd-mw0x3sa-a-silver--s250308342",
+  "31,39tr · Topzone · Mới 13\"": "https://www.topzone.vn/mac/macbook-air-13-inch-m4-16gb-512gb"
  },
  "Air M4 16/1TB · 34,5tr": {
   "34,5tr · MacVN · Mới 13\"": "https://macvn.com.vn/san-pham/macbook-air-13-inch-m4-2025/?attribute_cau-hinh=M4+%2F+16GB+%2F+1TB",
@@ -91,7 +89,6 @@
  "M4 32/1TB · 35,9tr": {
   "44,99tr · Topzone · Mới 13\"": "https://www.topzone.vn/mac/macbook-air-13-inch-m4-32gb-1tb",
   "35,9tr · Chợ Tốt · Cũ 13\" [MDM]": "https://www.chotot.com/135896655.htm",
-  "37,9tr · Chợ Tốt · Cũ [MDM]": "https://www.chotot.com/135311390.htm",
-  "38,9tr · Chợ Tốt · Cũ [MDM]": "https://www.chotot.com/134709311.htm"
+  "37,9tr · Chợ Tốt · Cũ [MDM]": "https://www.chotot.com/135311390.htm"
  }
 }
